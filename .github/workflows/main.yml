@@ -1,3 +1,62 @@
+# on:
+#   pull_request:
+#     branches:
+#       - main
+#       - master
+#   push:
+#     branches:
+#       - main
+#       - master
+
+# name: "Build & Release"
+
+# jobs:
+#   build:
+#     name: Build & Release
+#     runs-on: macos-latest
+#     steps:
+#       - uses: actions/checkout@v3
+
+#       - uses: actions/setup-java@v3
+#         with:
+#           distribution: 'zulu'
+#           java-version: '17'
+
+#       - uses: subosito/flutter-action@v2
+#         with:
+#           channel: 'stable'
+#           architecture: x64
+
+#       - run: flutter build apk --release
+
+#       # - run: |
+#       #     flutter build ios --no-codesign
+#       #     cd build/ios/iphoneos
+#       #     mkdir Payload
+#       #     cd Payload
+#       #     ln -s ../Runner.app
+#       #     cd ..
+#       #     zip -r app.ipa Payload
+
+#       - name: Push to Releases
+#         uses: ncipollo/release-action@v1
+#         with:
+#           # artifacts: "build/app/outputs/apk/release/*,build/ios/iphoneos/app.ipa"
+#           artifacts: "build/app/outputs/apk/release/*"
+#           tag: v1.0.${{ github.run_number }}
+#           token: ${{ secrets.TOKEN }}
+
+
+
+
+
+
+# # push to master, main
+# # pull request on main master
+
+
+
+
 on:
   pull_request:
     branches:
@@ -11,8 +70,8 @@ on:
 name: "Build & Release"
 
 jobs:
-  build:
-    name: Build & Release
+  setup:
+    name: Setup
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
@@ -27,29 +86,72 @@ jobs:
           channel: 'stable'
           architecture: x64
 
-      - run: flutter build apk --release
+  build_android:
+    name: Build Android App Bundle
+    runs-on: macos-latest
+    needs: setup
+    steps:
+      - uses: actions/checkout@v3
 
-      # - run: |
-      #     flutter build ios --no-codesign
-      #     cd build/ios/iphoneos
-      #     mkdir Payload
-      #     cd Payload
-      #     ln -s ../Runner.app
-      #     cd ..
-      #     zip -r app.ipa Payload
+      - name: Set up key.properties
+        run: |
+          echo "storePassword=${{ secrets.STORE_PASSWORD }}" > android/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+          echo "storeFile=${{ secrets.STORE_FILE }}" >> android/key.properties
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          architecture: x64
+
+      - run: flutter build appbundle --release
+
+      - name: Upload AAB Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-app-bundle
+          path: build/app/outputs/bundle/release/*.aab
+
+  release:
+    name: Release
+    runs-on: macos-latest
+    needs: build_android
+    steps:
+      - name: Download AAB Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: android-app-bundle
 
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          # artifacts: "build/app/outputs/apk/release/*,build/ios/iphoneos/app.ipa"
-          artifacts: "build/app/outputs/apk/release/*"
+          artifacts: "android-app-bundle/*.aab"
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.TOKEN }}
 
-
-
-
-
-
-# push to master, main
-# pull request on main master
+  # Optionally, add a job for iOS build if needed
+  # build_ios:
+  #   name: Build iOS App
+  #   runs-on: macos-latest
+  #   needs: setup
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: subosito/flutter-action@v2
+  #       with:
+  #         channel: 'stable'
+  #         architecture: x64
+  #     - run: flutter build ios --no-codesign
+  #     - name: Create IPA
+  #       run: |
+  #         cd build/ios/iphoneos
+  #         mkdir Payload
+  #         cd Payload
+  #         ln -s ../Runner.app
+  #         cd ..
+  #         zip -r app.ipa Payload
+  #     - name: Upload IPA Artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ios-app
+  #         path: build/ios/iphoneos/app.ipa
