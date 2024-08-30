@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/job_model.dart';
 
-// Testing the app
+// Testing
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
