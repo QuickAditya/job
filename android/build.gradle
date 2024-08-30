@@ -1,14 +1,7 @@
 allprojects {
-    ext {
-        // Ensure this version is compatible with Java 17
-        gradleVersion = '7.3'
-    }
     repositories {
         google()
         mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.3'
     }
 }
 
