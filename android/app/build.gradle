@@ -52,12 +52,28 @@ android {
         versionName = flutterVersionName
     }
 
+    // signingConfigs {
+    //     release {
+    //         keyAlias = keystoreProperties['keyAlias']
+    //         keyPassword = keystoreProperties['keyPassword']
+    //         storeFile = keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+    //         storePassword = keystoreProperties['storePassword']
+    //     }
+    // }
     signingConfigs {
         release {
-            keyAlias = keystoreProperties['keyAlias']
-            keyPassword = keystoreProperties['keyPassword']
-            storeFile = keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword = keystoreProperties['storePassword']
+            def keystorePropertiesFile = rootProject.file('android/key.properties')
+            if (keystorePropertiesFile.exists()) {
+                def keystoreProperties = new Properties()
+                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+                storeFile = file(keystoreProperties['storeFile'])
+                storePassword = keystoreProperties['storePassword']
+                keyAlias = keystoreProperties['keyAlias']
+                keyPassword = keystoreProperties['keyPassword']
+            } else {
+                throw new GradleException("Missing key.properties file")
+            }
         }
     }
 
