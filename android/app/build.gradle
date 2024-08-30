@@ -24,11 +24,11 @@ if (flutterVersionName == null) {
 }
 
 // Playstore
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
+// def keystoreProperties = new Properties()
+// def keystorePropertiesFile = rootProject.file('key.properties')
+// if (keystorePropertiesFile.exists()) {
+//     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+// }
 
 android {
     namespace = "com.job.portal"
@@ -52,30 +52,30 @@ android {
         versionName = flutterVersionName
     }
 
-    signingConfigs {
-        release {
-            keyAlias = keystoreProperties['keyAlias']
-            keyPassword = keystoreProperties['keyPassword']
-            storeFile = keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword = keystoreProperties['storePassword']
-        }
-    }
     // signingConfigs {
     //     release {
-    //         def keystorePropertiesFile = rootProject.file('android/key.properties')
-    //         if (keystorePropertiesFile.exists()) {
-    //             def keystoreProperties = new Properties()
-    //             keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
-    //             storeFile = file(keystoreProperties['storeFile'])
-    //             storePassword = keystoreProperties['storePassword']
-    //             keyAlias = keystoreProperties['keyAlias']
-    //             keyPassword = keystoreProperties['keyPassword']
-    //         } else {
-    //             throw new GradleException("Missing key.properties file")
-    //         }
+    //         keyAlias = keystoreProperties['keyAlias']
+    //         keyPassword = keystoreProperties['keyPassword']
+    //         storeFile = keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+    //         storePassword = keystoreProperties['storePassword']
     //     }
     // }
+    signingConfigs {
+        release {
+            def keystorePropertiesFile = rootProject.file('android/key.properties')
+            if (keystorePropertiesFile.exists()) {
+                def keystoreProperties = new Properties()
+                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+                storeFile = file(keystoreProperties['storeFile'])
+                storePassword = keystoreProperties['storePassword']
+                keyAlias = keystoreProperties['keyAlias']
+                keyPassword = keystoreProperties['keyPassword']
+            } else {
+                throw new GradleException("Missing key.properties file")
+            }
+        }
+    }
 
     buildTypes {
         release {
