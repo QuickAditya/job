@@ -1,99 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:get_it/get_it.dart';
-// import 'package:job/features/auth/controllers/auth_controller.dart';
-// import 'package:job/utils/validators.dart';
-
-// import 'widgets/custom_button.dart';
-// import 'widgets/custom_text_field.dart';
-
-// class SignupPage extends StatefulWidget {
-//   const SignupPage({super.key});
-
-//   @override
-//   State<SignupPage> createState() => _SignupPageState();
-// }
-
-// class _SignupPageState extends State<SignupPage> {
-//   final TextEditingController nameController = TextEditingController();
-//   final TextEditingController emailController = TextEditingController();
-//   final TextEditingController passwordController = TextEditingController();
-//   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final authController = GetIt.instance<AuthController>();
-
-//     return Scaffold(
-//       appBar: AppBar(title: const Text('Signup')),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Form(
-//           key: _formKey,
-//           child: Column(
-//             children: [
-//               CustomTextField(
-//                 controller: nameController,
-//                 labelText: 'Name',
-//                 validator: Validators.nameValidator,
-//               ),
-//               const SizedBox(height: 20),
-//               CustomTextField(
-//                 controller: emailController,
-//                 labelText: 'Email',
-//                 validator: Validators.emailValidator,
-//               ),
-//               const SizedBox(height: 20),
-//               CustomTextField(
-//                 controller: passwordController,
-//                 labelText: 'Password',
-//                 isPasswordField: true,
-//                 validator: Validators.passwordValidator,
-//               ),
-//               const SizedBox(height: 20),
-//               CustomButton(
-//                 onPressed: () async {
-//                   if (_formKey.currentState?.validate() ?? false) {
-//                     final result = await authController.signup(
-//                       nameController.text,
-//                       emailController.text,
-//                       passwordController.text,
-//                     );
-//                     result.fold(
-//                       (error) => ScaffoldMessenger.of(context).showSnackBar(
-//                         SnackBar(content: Text(error)),
-//                       ),
-//                       (success) =>
-//                           Navigator.pushReplacementNamed(context, '/home'),
-//                     );
-//                   }
-//                 },
-//                 child: const Text(
-//                   'Signup',
-//                   style: TextStyle(
-//                     fontSize: 16.0,
-//                     color: Colors.white,
-//                   ),
-//                 ),
-//               ),
-//               TextButton(
-//                 onPressed: () =>
-//                     Navigator.pushReplacementNamed(context, '/login'),
-//                 child: const Text(
-//                   "Already have an account? Login",
-//                 ),
-//               ),
-//               TextButton(
-//                   onPressed: () =>
-//                       Navigator.pushReplacementNamed(context, '/home'),
-//                   child: const Text("Home Page"))
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job/features/auth/controllers/auth_controller.dart';
@@ -142,6 +46,7 @@ class _SignupPageState extends State<SignupPage> {
                       height: 50,
                     ),
                     CupertinoTextField(
+                      key: const Key('signup-name-text-field'),
                       controller: nameController,
                       placeholder: 'Name',
                       padding: const EdgeInsets.symmetric(
@@ -155,6 +60,7 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     const SizedBox(height: 20),
                     CupertinoTextField(
+                      key: const Key('signup-number-text-field'),
                       controller: numberController,
                       placeholder: 'Number',
                       padding: const EdgeInsets.symmetric(
@@ -169,6 +75,7 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     const SizedBox(height: 20),
                     CupertinoTextField(
+                      key: const Key('signup-email-text-field'),
                       controller: emailController,
                       placeholder: 'Email',
                       padding: const EdgeInsets.symmetric(
@@ -186,6 +93,7 @@ class _SignupPageState extends State<SignupPage> {
                       alignment: Alignment.centerRight,
                       children: [
                         CupertinoTextField(
+                          key: const Key('signup-password-text-field'),
                           controller: passwordController,
                           placeholder: 'Password',
                           padding: const EdgeInsets.symmetric(
@@ -200,6 +108,7 @@ class _SignupPageState extends State<SignupPage> {
                           textInputAction: TextInputAction.done,
                         ),
                         CupertinoButton(
+                          key: const Key('signup-eye-button'),
                           padding: EdgeInsets.zero,
                           child: Icon(
                             _obscureText
@@ -216,6 +125,7 @@ class _SignupPageState extends State<SignupPage> {
                       ],
                     ),
                     CupertinoButton(
+                      key: const Key('signup-to-login-button'),
                       child: const Text(
                         "Already have an account? Login",
                         style: TextStyle(
@@ -227,6 +137,7 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     const SizedBox(height: 10),
                     CupertinoButton.filled(
+                      key: const Key('signup-button'),
                       child: const Text(
                         'Signup',
                         style: TextStyle(

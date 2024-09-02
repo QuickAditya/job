@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
           return MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (_) => AuthController()),
-              ChangeNotifierProvider(create: (_) => HomeController()),
+              ChangeNotifierProvider(create: (_) => HomeController()..fetchJobData()),
             ],
             child: CupertinoApp(
               title: 'Flutter Demo',

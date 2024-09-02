@@ -43,6 +43,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 50,
                   ),
                   CupertinoTextField(
+                    key: const Key('login-email-text-field'),
                     controller: emailController,
                     placeholder: 'Email',
                     padding: const EdgeInsets.symmetric(
@@ -60,6 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                     alignment: Alignment.centerRight,
                     children: [
                       CupertinoTextField(
+                        key: const Key('login-password-text-field'),
                         maxLength: 12,
                         controller: passwordController,
                         placeholder: 'Password',
@@ -75,6 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                         textInputAction: TextInputAction.done,
                       ),
                       CupertinoButton(
+                        key: const Key('login-eye-button'),
                         padding: EdgeInsets.zero,
                         child: Icon(
                           _obscureText
@@ -91,6 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                   CupertinoButton(
+                    key: const Key('login-to-signup-button'),
                     child: const Text(
                       "Don't have an account? Sign Up",
                       style: TextStyle(
@@ -102,6 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 10),
                   CupertinoButton.filled(
+                    key: const Key('login-button'),
                     child: const Text(
                       'Login',
                       style: TextStyle(

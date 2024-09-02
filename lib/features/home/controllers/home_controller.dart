@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:job/features/home/models/job_model.dart';
 import 'package:either_dart/either.dart';
@@ -10,6 +11,7 @@ class HomeController with ChangeNotifier {
   JobModel? jobModel;
   int currentPage = 1;
   int pageLength = 5;
+  bool isLoading = false;
 
   updateCurrentPage(int val) {
     currentPage = val;
@@ -19,6 +21,44 @@ class HomeController with ChangeNotifier {
   updatePageLength(int val) {
     pageLength = val;
     notifyListeners();
+  }
+  fetchHomePageData(BuildContext context) async {
+    // setState(() {
+      isLoading = true;
+      notifyListeners();
+    // });
+    final result = 
+    // await Provider.of<HomeController>(context, listen: false)
+    //     .
+        fetchJobData();
+    result.fold(
+      (error) => CupertinoPageScaffold(
+        navigationBar: const CupertinoNavigationBar(
+          middle: Text('Job Listings'),
+        ),
+        child: Center(
+          child: CupertinoAlertDialog(
+            title: const Text('Error'),
+            content: Text(error),
+            actions: [
+              CupertinoDialogAction(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      (success) {
+      isLoading = false;
+      notifyListeners();
+        // setState(() {
+        //   isLoading = true;
+        // });
+      },
+    );
   }
 
   Future<Either<String, bool>> fetchJobData() async {

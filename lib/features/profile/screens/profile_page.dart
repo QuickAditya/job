@@ -62,7 +62,7 @@ class _ProfilePageState extends State<ProfilePage> {
     // Fetch email from GetStorage
     final email = getStorage.read<String>('email') ?? 'No email available';
     final name = getStorage.read<String>('name') ?? 'No name available';
-    final number = getStorage.read<String>('number') ?? 'No name available';
+    final number = getStorage.read<String>('number') ?? 'No number available';
 
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(
