@@ -1,3 +1,78 @@
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+  push:
+    branches:
+      - main
+      - master
+
+name: "Test, Build & Release"
+
+jobs:
+  build:
+    name: Test, Build & Release
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          architecture: x64
+      
+      
+      # Run Flutter tests
+      - run: flutter test
+
+      # Create Build
+      - run: flutter build apk --release
+
+      # - run: |
+      #     flutter build ios --no-codesign
+      #     cd build/ios/iphoneos
+      #     mkdir Payload
+      #     cd Payload
+      #     ln -s ../Runner.app
+      #     cd ..
+      #     zip -r app.ipa Payload
+
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          # artifacts: "build/app/outputs/apk/release/*,build/ios/iphoneos/app.ipa"
+          artifacts: "build/app/outputs/apk/release/*"
+          tag: v1.0.${{ github.run_number }}
+          token: ${{ secrets.TOKEN }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # on:
 #   pull_request:
 #     branches:
@@ -11,8 +86,8 @@
 # name: "Build & Release"
 
 # jobs:
-#   build:
-#     name: Build & Release
+#   test:
+#     name: Run Tests
 #     runs-on: macos-latest
 #     steps:
 #       - uses: actions/checkout@v3
@@ -26,22 +101,27 @@
 #         with:
 #           channel: 'stable'
 #           architecture: x64
-      
-      
-#       # Run Flutter tests
+
 #       - run: flutter test
 
-#       # Create Build
-#       - run: flutter build apk --release
+#   build-android:
+#     name: Build Android APK
+#     runs-on: macos-latest
+#     needs: test
+#     steps:
+#       - uses: actions/checkout@v3
 
-#       # - run: |
-#       #     flutter build ios --no-codesign
-#       #     cd build/ios/iphoneos
-#       #     mkdir Payload
-#       #     cd Payload
-#       #     ln -s ../Runner.app
-#       #     cd ..
-#       #     zip -r app.ipa Payload
+#       - uses: actions/setup-java@v3
+#         with:
+#           distribution: 'zulu'
+#           java-version: '17'
+
+#       - uses: subosito/flutter-action@v2
+#         with:
+#           channel: 'stable'
+#           architecture: x64
+
+#       - run: flutter build apk --release
 
 #       - name: Push to Releases
 #         uses: ncipollo/release-action@v1
@@ -51,107 +131,42 @@
 #           tag: v1.0.${{ github.run_number }}
 #           token: ${{ secrets.TOKEN }}
 
+#   # build-ios:
+#   #   name: Build iOS App
+#   #   runs-on: macos-latest
+#   #   needs: test
+#   #   steps:
+#   #     - uses: actions/checkout@v3
 
+#   #     - uses: actions/setup-java@v3
+#   #       with:
+#   #         distribution: 'zulu'
+#   #         java-version: '17'
 
+#   #     - uses: subosito/flutter-action@v2
+#   #       with:
+#   #         channel: 'stable'
+#   #         architecture: x64
 
+#   #     - run: flutter build ios --no-codesign
+#   #     - run: |
+#   #         cd build/ios/iphoneos
+#   #         mkdir Payload
+#   #         cd Payload
+#   #         ln -s ../Runner.app
+#   #         cd ..
+#   #         zip -r app.ipa Payload
 
+#   # release:
+#   #   name: Release Artifacts
+#   #   runs-on: macos-latest
+#   #   needs: [build-android, build-ios]
+#   #   steps:
+#   #     - uses: actions/checkout@v3
 
-
-
-on:
-  pull_request:
-    branches:
-      - main
-      - master
-  push:
-    branches:
-      - main
-      - master
-
-name: "Build & Release"
-
-jobs:
-  test:
-    name: Run Tests
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          architecture: x64
-
-      - run: flutter test
-
-  build-android:
-    name: Build Android APK
-    runs-on: macos-latest
-    needs: test
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          architecture: x64
-
-      - run: flutter build apk --release
-
-      - name: Push to Releases
-        uses: ncipollo/release-action@v1
-        with:
-          # artifacts: "build/app/outputs/apk/release/*,build/ios/iphoneos/app.ipa"
-          artifacts: "build/app/outputs/apk/release/*"
-          tag: v1.0.${{ github.run_number }}
-          token: ${{ secrets.TOKEN }}
-
-  # build-ios:
-  #   name: Build iOS App
-  #   runs-on: macos-latest
-  #   needs: test
-  #   steps:
-  #     - uses: actions/checkout@v3
-
-  #     - uses: actions/setup-java@v3
-  #       with:
-  #         distribution: 'zulu'
-  #         java-version: '17'
-
-  #     - uses: subosito/flutter-action@v2
-  #       with:
-  #         channel: 'stable'
-  #         architecture: x64
-
-  #     - run: flutter build ios --no-codesign
-  #     - run: |
-  #         cd build/ios/iphoneos
-  #         mkdir Payload
-  #         cd Payload
-  #         ln -s ../Runner.app
-  #         cd ..
-  #         zip -r app.ipa Payload
-
-  # release:
-  #   name: Release Artifacts
-  #   runs-on: macos-latest
-  #   needs: [build-android, build-ios]
-  #   steps:
-  #     - uses: actions/checkout@v3
-
-  #     - name: Push to Releases
-  #       uses: ncipollo/release-action@v1
-  #       with:
-  #         artifacts: "build/app/outputs/apk/release/*,build/ios/iphoneos/app.ipa"
-  #         tag: v1.0.${{ github.run_number }}
-  #         token: ${{ secrets.TOKEN }}
+#   #     - name: Push to Releases
+#   #       uses: ncipollo/release-action@v1
+#   #       with:
+#   #         artifacts: "build/app/outputs/apk/release/*,build/ios/iphoneos/app.ipa"
+#   #         tag: v1.0.${{ github.run_number }}
+#   #         token: ${{ secrets.TOKEN }}
