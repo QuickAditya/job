@@ -10,6 +10,8 @@ import 'package:mockito/mockito.dart';
 class MockAuthController extends Mock implements AuthController {}
 
 void main() {
+    group('SignUp Page', () {
+
   testWidgets('Signup page displays correctly and has all necessary fields', (tester) async {
     final mockAuthController = MockAuthController();
 
@@ -163,6 +165,7 @@ void main() {
 
     // Verify navigation to login page
     expect(find.text('Login Page'), findsOneWidget);
+  });
   });
 
   /*

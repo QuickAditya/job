@@ -34,107 +34,108 @@ void main() {
     );
   }
 
-  testWidgets('Check HomePage Loading', (WidgetTester tester) async {
-    // Arrange
-    when(mockHomeController.jobModel).thenReturn(null);
-    when(mockHomeController.isLoading).thenReturn(true);
-    when(mockHomeController.currentPage).thenReturn(1);
-    when(mockHomeController.pageLength).thenReturn(5);
+  group('Home Page', () {
+    testWidgets('Check HomePage Loading', (WidgetTester tester) async {
+      // Arrange
+      when(mockHomeController.jobModel).thenReturn(null);
+      when(mockHomeController.isLoading).thenReturn(true);
+      when(mockHomeController.currentPage).thenReturn(1);
+      when(mockHomeController.pageLength).thenReturn(5);
 
-    // Act
-    await tester.pumpWidget(createHomePageWidget());
+      // Act
+      await tester.pumpWidget(createHomePageWidget());
 
-    // Assert
-    expect(find.byType(CupertinoActivityIndicator), findsOneWidget);
+      // Assert
+      expect(find.byType(CupertinoActivityIndicator), findsOneWidget);
+    });
+
+    testWidgets('No Jobs Found', (WidgetTester tester) async {
+      // Arrange
+      when(mockHomeController.jobModel).thenReturn(null);
+      when(mockHomeController.isLoading).thenReturn(false);
+
+      when(mockHomeController.currentPage).thenReturn(1);
+      when(mockHomeController.pageLength).thenReturn(5);
+
+      // Act
+      await tester.pumpWidget(createHomePageWidget());
+
+      // Assert
+      expect(find.text('No Jobs Found'), findsOneWidget);
+    });
+
+    testWidgets('displays job cards when data is loaded',
+        (WidgetTester tester) async {
+      // Arrange
+      final jobModel = JobModel(
+        data: Data(
+          job: [
+            Job(
+              jobTitle: 'Software Engineer',
+              description: 'Develop awesome software!',
+              location: 'San Francisco',
+              jobType: 'Full-time',
+              minExperience: '2 years',
+              maxExperience: '5 years',
+              skills: [
+                Skills(skillName: 'Flutter', years: '2', level: 'Intermediate'),
+              ],
+              jobReferralUrl: 'https://example.com/apply',
+            ),
+          ],
+        ),
+      );
+      when(mockHomeController.jobModel).thenReturn(jobModel);
+      when(mockHomeController.isLoading).thenReturn(false);
+      when(mockHomeController.currentPage).thenReturn(1);
+      when(mockHomeController.pageLength).thenReturn(5);
+
+      // Act
+      await tester.pumpWidget(createHomePageWidget());
+
+      // Assert
+      expect(find.byType(JobCard), findsOneWidget);
+    });
+
+    testWidgets('refresh button works', (WidgetTester tester) async {
+      // Arrange
+      final jobModel = JobModel(
+        data: Data(
+          job: [
+            Job(
+              jobTitle: 'Software Engineer',
+              description: 'Develop awesome software!',
+              location: 'San Francisco',
+              jobType: 'Full-time',
+              minExperience: '2 years',
+              maxExperience: '5 years',
+              skills: [
+                Skills(skillName: 'Flutter', years: '2', level: 'Intermediate'),
+              ],
+              jobReferralUrl: 'https://example.com/apply',
+            ),
+          ],
+        ),
+      );
+      when(mockHomeController.jobModel).thenReturn(jobModel);
+      // when(mockHomeController.jobModel).thenReturn(null);
+      when(mockHomeController.isLoading).thenReturn(false);
+      when(mockHomeController.currentPage).thenReturn(1);
+      when(mockHomeController.pageLength).thenReturn(5);
+
+      // Act
+      await tester.pumpWidget(createHomePageWidget());
+      // await tester.drag(find.byType(CupertinoSliverRefreshControl),Offset(0, 500));
+      await tester.fling(find.text('Apply Now'), const Offset(0, 900), 800);
+      await tester.pump();
+
+      // Assert
+      // verify(mockHomeController.fetchJobData()).called(1);
+      expect(find.byType(JobCard), findsOneWidget);
+    });
   });
 
-  testWidgets('No Jobs Found', (WidgetTester tester) async {
-    // Arrange
-    when(mockHomeController.jobModel).thenReturn(null);
-    when(mockHomeController.isLoading).thenReturn(false);
-
-    when(mockHomeController.currentPage).thenReturn(1);
-    when(mockHomeController.pageLength).thenReturn(5);
-
-    // Act
-    await tester.pumpWidget(createHomePageWidget());
-
-    // Assert
-    expect(find.text('No Jobs Found'), findsOneWidget);
-  });
-
-  testWidgets('displays job cards when data is loaded',
-      (WidgetTester tester) async {
-    // Arrange
-    final jobModel = JobModel(
-      data: Data(
-        job: [
-          Job(
-            jobTitle: 'Software Engineer',
-            description: 'Develop awesome software!',
-            location: 'San Francisco',
-            jobType: 'Full-time',
-            minExperience: '2 years',
-            maxExperience: '5 years',
-            skills: [
-              Skills(skillName: 'Flutter', years: '2', level: 'Intermediate'),
-            ],
-            jobReferralUrl: 'https://example.com/apply',
-          ),
-        ],
-      ),
-    );
-    when(mockHomeController.jobModel).thenReturn(jobModel);
-    when(mockHomeController.isLoading).thenReturn(false);
-    when(mockHomeController.currentPage).thenReturn(1);
-    when(mockHomeController.pageLength).thenReturn(5);
-
-    // Act
-    await tester.pumpWidget(createHomePageWidget());
-
-    // Assert
-    expect(find.byType(JobCard), findsOneWidget);
-  });
-
-  testWidgets('refresh button works', (WidgetTester tester) async {
-    // Arrange
-    final jobModel = JobModel(
-      data: Data(
-        job: [
-          Job(
-            jobTitle: 'Software Engineer',
-            description: 'Develop awesome software!',
-            location: 'San Francisco',
-            jobType: 'Full-time',
-            minExperience: '2 years',
-            maxExperience: '5 years',
-            skills: [
-              Skills(skillName: 'Flutter', years: '2', level: 'Intermediate'),
-            ],
-            jobReferralUrl: 'https://example.com/apply',
-          ),
-        ],
-      ),
-    );
-    when(mockHomeController.jobModel).thenReturn(jobModel);
-    // when(mockHomeController.jobModel).thenReturn(null);
-    when(mockHomeController.isLoading).thenReturn(false);
-    when(mockHomeController.currentPage).thenReturn(1);
-    when(mockHomeController.pageLength).thenReturn(5);
-
-    // Act
-    await tester.pumpWidget(createHomePageWidget());
-    // await tester.drag(find.byType(CupertinoSliverRefreshControl),Offset(0, 500));
-    await tester.fling(find.text('Apply Now'), const Offset(0, 900), 800);
-    await tester.pump();
-
-    // Assert
-    // verify(mockHomeController.fetchJobData()).called(1);
-    expect(find.byType(JobCard), findsOneWidget);
-
-  });
-
-  group('JobModel', () {
+  group('Job Model', () {
     test('fromJson and toJson should work for JobModel', () {
       // Arrange
       final json = {

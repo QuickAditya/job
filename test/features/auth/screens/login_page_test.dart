@@ -26,6 +26,8 @@ import 'login_page_test.mocks.dart';
 // Annotate your test with @GenerateMocks
 @GenerateMocks([AuthController, AuthRepo, GetStorage])
 void main() {
+  provideDummy<Either<String, bool>>(const Right(true));
+
   late MockAuthController mockAuthController;
   late MockAuthRepo mockAuthRepo;
   late MockGetStorage mockGetStorage;
@@ -38,58 +40,60 @@ void main() {
     mockGetStorage = MockGetStorage();
     mockAuthController = MockAuthController();
 
-    // getIt.registerLazySingleton<AuthRepo>(() => mockAuthRepo);
-    // getIt.registerLazySingleton<GetStorage>(() => mockGetStorage);
+    getIt.registerLazySingleton<AuthRepo>(() => mockAuthRepo);
+    getIt.registerLazySingleton<GetStorage>(() => mockGetStorage);
   });
 
-  testWidgets('Login page displays correctly and has all necessary fields',
-      (tester) async {
-    final mockAuthController = MockAuthController();
+  group('Login Page', () {
+    testWidgets('Login page displays correctly and has all necessary fields',
+        (tester) async {
+      final mockAuthController = MockAuthController();
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: ChangeNotifierProvider<AuthController>.value(
-          value: mockAuthController,
-          child: const LoginPage(),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ChangeNotifierProvider<AuthController>.value(
+            value: mockAuthController,
+            child: const LoginPage(),
+          ),
         ),
-      ),
-    );
+      );
 
-    // Verify the presence of UI elements
-    expect(find.text('TO MY JOBS'), findsOneWidget);
-    expect(find.byKey(const Key('login-email-text-field')), findsOneWidget);
-    expect(find.byKey(const Key('login-password-text-field')), findsOneWidget);
-    expect(find.byType(CupertinoButton),
-        findsNWidgets(3)); // Includes the 'Login' button
-    expect(find.text("Don't have an account? Sign Up"), findsOneWidget);
-    expect(find.byKey(const Key('login-button')), findsOneWidget);
-    expect(find.text('Login'), findsNWidgets(2));
-  });
+      // Verify the presence of UI elements
+      expect(find.text('TO MY JOBS'), findsOneWidget);
+      expect(find.byKey(const Key('login-email-text-field')), findsOneWidget);
+      expect(
+          find.byKey(const Key('login-password-text-field')), findsOneWidget);
+      expect(find.byType(CupertinoButton),
+          findsNWidgets(3)); // Includes the 'Login' button
+      expect(find.text("Don't have an account? Sign Up"), findsOneWidget);
+      expect(find.byKey(const Key('login-button')), findsOneWidget);
+      expect(find.text('Login'), findsNWidgets(2));
+    });
 
-  testWidgets('Password visibility toggle works correctly', (tester) async {
-    final mockAuthController = MockAuthController();
+    testWidgets('Password visibility toggle works correctly', (tester) async {
+      final mockAuthController = MockAuthController();
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: ChangeNotifierProvider<AuthController>.value(
-          value: mockAuthController,
-          child: const LoginPage(),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ChangeNotifierProvider<AuthController>.value(
+            value: mockAuthController,
+            child: const LoginPage(),
+          ),
         ),
-      ),
-    );
+      );
 
-    // Check initial visibility icon
-    expect(find.byIcon(CupertinoIcons.eye), findsOneWidget);
+      // Check initial visibility icon
+      expect(find.byIcon(CupertinoIcons.eye), findsOneWidget);
 
-    // Tap the icon to toggle visibility
-    await tester.tap(find.byIcon(CupertinoIcons.eye));
-    await tester.pump();
+      // Tap the icon to toggle visibility
+      await tester.tap(find.byIcon(CupertinoIcons.eye));
+      await tester.pump();
 
-    // Check if the icon changed to eye_slash
-    expect(find.byIcon(CupertinoIcons.eye_slash), findsOneWidget);
-  });
+      // Check if the icon changed to eye_slash
+      expect(find.byIcon(CupertinoIcons.eye_slash), findsOneWidget);
+    });
 
-  /*
+    /*
   testWidgets('Login button is enabled/disabled based on form validation',
       (tester) async {
     final mockAuthController = MockAuthController();
@@ -127,69 +131,71 @@ void main() {
   });
   */
 
-  testWidgets('Empty Login Fields', (tester) async {
-    final mockAuthController = MockAuthController();
+    testWidgets('Empty Login Fields', (tester) async {
+      final mockAuthController = MockAuthController();
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: ChangeNotifierProvider<AuthController>.value(
-          value: mockAuthController,
-          child: const LoginPage(),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ChangeNotifierProvider<AuthController>.value(
+            value: mockAuthController,
+            child: const LoginPage(),
+          ),
         ),
-      ),
-    );
+      );
 
-    // Initial state, the button should be enabled if fields are filled correctly
-    expect(find.byKey(const Key('login-eye-button')), findsOneWidget);
-    expect(find.byKey(const Key('login-to-signup-button')), findsOneWidget);
-    expect(find.byKey(const Key('login-button')), findsOneWidget);
+      // Initial state, the button should be enabled if fields are filled correctly
+      expect(find.byKey(const Key('login-eye-button')), findsOneWidget);
+      expect(find.byKey(const Key('login-to-signup-button')), findsOneWidget);
+      expect(find.byKey(const Key('login-button')), findsOneWidget);
 
-    // Enter invalid data
-    await tester.enterText(
-        find.byKey(const Key('login-email-text-field')).first, '');
-    await tester.enterText(
-        find.byKey(const Key('login-password-text-field')), '');
-    await tester.pump();
+      // Enter invalid data
+      await tester.enterText(
+          find.byKey(const Key('login-email-text-field')).first, '');
+      await tester.enterText(
+          find.byKey(const Key('login-password-text-field')), '');
+      await tester.pump();
 
-    // Tap login button
-    await tester.tap(find.byKey(const Key('login-button')));
-    await tester.pump();
+      // Tap login button
+      await tester.tap(find.byKey(const Key('login-button')));
+      await tester.pump();
 
-    // Verify error dialog is shown
-    expect(find.byType(CupertinoAlertDialog), findsOneWidget);
-    expect(find.text('Invalid Field'), findsOneWidget);
-    expect(find.text('Invalid Email/Password'), findsOneWidget);
-    expect(find.text('OK'), findsOneWidget);
+      // Verify error dialog is shown
+      expect(find.byType(CupertinoAlertDialog), findsOneWidget);
+      expect(find.text('Invalid Field'), findsOneWidget);
+      expect(find.text('Invalid Email/Password'), findsOneWidget);
+      expect(find.text('OK'), findsOneWidget);
+    });
+
+    testWidgets('Navigation to Sign Up page works', (tester) async {
+      final mockAuthController = MockAuthController();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ChangeNotifierProvider<AuthController>.value(
+            value: mockAuthController,
+            child: const LoginPage(),
+          ),
+          onGenerateRoute: (settings) {
+            if (settings.name == '/signup') {
+              return MaterialPageRoute(
+                builder: (context) =>
+                    const Scaffold(body: Text('Sign Up Page')),
+              );
+            }
+            return null;
+          },
+        ),
+      );
+
+      // Tap Sign Up link
+      await tester.tap(find.text("Don't have an account? Sign Up"));
+      await tester.pumpAndSettle();
+
+      // Verify navigation to sign up page
+      expect(find.text('Sign Up Page'), findsOneWidget);
+    });
   });
 
-  testWidgets('Navigation to Sign Up page works', (tester) async {
-    final mockAuthController = MockAuthController();
-
-    await tester.pumpWidget(
-      MaterialApp(
-        home: ChangeNotifierProvider<AuthController>.value(
-          value: mockAuthController,
-          child: const LoginPage(),
-        ),
-        onGenerateRoute: (settings) {
-          if (settings.name == '/signup') {
-            return MaterialPageRoute(
-              builder: (context) => const Scaffold(body: Text('Sign Up Page')),
-            );
-          }
-          return null;
-        },
-      ),
-    );
-
-    // Tap Sign Up link
-    await tester.tap(find.text("Don't have an account? Sign Up"));
-    await tester.pumpAndSettle();
-
-    // Verify navigation to sign up page
-    expect(find.text('Sign Up Page'), findsOneWidget);
-  });
- 
   /*
   test('successful login returns Right(true)', () async {
     final mockResponse = Response(
@@ -211,7 +217,7 @@ void main() {
       '123456',
       // mocRepo: mockAuthRepo,
       // mocStorage: mockGetStorage,
-    )).thenAnswer((_) async => Right(true));
+    )).thenAnswer((_) async => const Right(true));
 
     final result = await mockAuthController.login(
       'dhruvsoni7220@gmail.com',
@@ -220,7 +226,7 @@ void main() {
       // mocStorage: mockGetStorage,
     );
 
-    expect(result, equals(Right(true)));
+    expect(result, equals(const Right(true)));
   });
 
   testWidgets('Login button triggers login action and navigates on success',

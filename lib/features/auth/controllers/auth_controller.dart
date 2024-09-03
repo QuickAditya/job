@@ -12,19 +12,19 @@ class AuthController with ChangeNotifier {
    AuthRepo authRepo = GetIt.instance<AuthRepo>();
    GetStorage getStorage = GetIt.instance<GetStorage>();
 
-  Future<Either<dynamic, bool>> login(String email, String password, {AuthRepo? mocRepo, GetStorage? mocStorage}) async {
+  Future<Either<dynamic, bool>> login(String email, String password) async {
     try {
-      final response = await ( mocRepo ?? authRepo).login(email, password);
+      final response = await authRepo.login(email, password);
       log("${response.data}", name: 'RAW RESPONSE');
       if (response.statusCode == 200) {
         final responseModel = RegisterResponseModel.fromJson(response.data);
 
         log("${responseModel.message}, ${responseModel.items.name}");
 
-        ( mocStorage ?? getStorage).write('email', email);
-        ( mocStorage ?? getStorage).write('token', responseModel.items.token);
-        ( mocStorage ?? getStorage).write('userId', responseModel.items.id);
-        ( mocStorage ?? getStorage).write('isLogin', true);
+        getStorage.write('email', email);
+        getStorage.write('token', responseModel.items.token);
+        getStorage.write('userId', responseModel.items.id);
+        getStorage.write('isLogin', true);
         return const Right(true);
       } else {
         return const Left('Login failed');

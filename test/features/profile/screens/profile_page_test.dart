@@ -24,7 +24,7 @@ void main() {
     // GetIt.instance.registerSingleton<AuthController>(mockAuthController);
   });
 
-  // group('Profile', () {
+  group('Profile Page', () {
 
   testWidgets('ProfilePage displays correct Null/Non-null data',
       (tester) async {
@@ -73,33 +73,7 @@ void main() {
     expect(find.text('No number available'), findsOneWidget);
   });
 
-  // testWidgets('ProfilePage displays default values when no data is available',
-  //     (tester) async {
-  //         // provideDummy<Either<String, bool>>(const Right(true));
 
-  //   // Setup mock data
-  //   when(mockGetStorage.read<String>('email')).thenReturn(null);
-  //   when(mockGetStorage.read<String>('name')).thenReturn(null);
-  //   when(mockGetStorage.read<String>('number')).thenReturn(null);
-  //   when(mockAuthController.fetchProfile()).thenAnswer((_) async => Right(true));
-
-  //   // Build the ProfilePage widget
-  //   await tester.pumpWidget(
-  //     CupertinoApp(
-  //       home: ChangeNotifierProvider<AuthController>.value(
-  //         value: mockAuthController,
-  //         child: const ProfilePage(),
-  //       ),
-  //     ),
-  //   );
-
-  //   // Verify default values are displayed
-  //   expect(find.text('No email available'), findsOneWidget);
-  //   expect(find.text('No name available'), findsOneWidget);
-  //   expect(find.text('No number available'), findsOneWidget);
-  // });
-
-
-  // });
+  });
 
 }
