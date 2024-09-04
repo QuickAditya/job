@@ -1,48 +1,41 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatefulWidget {
+class CustomCupertinoTextField extends StatelessWidget {
   final TextEditingController controller;
-  final String labelText;
-  final bool isPasswordField;
-  final String? Function(String?)? validator;
+  final String placeholder;
+  final Icon prefixIcon;
+  final TextInputType keyboardType;
+  final TextInputAction textInputAction;
+  final bool obscureText;
 
-  const CustomTextField({
+  const CustomCupertinoTextField({
     Key? key,
     required this.controller,
-    required this.labelText,
-    this.isPasswordField = false,
-    this.validator,
+    required this.placeholder,
+    required this.prefixIcon,
+    this.keyboardType = TextInputType.text,
+    this.textInputAction = TextInputAction.done,
+    this.obscureText = false,
   }) : super(key: key);
 
   @override
-  _CustomTextFieldState createState() => _CustomTextFieldState();
-}
-
-class _CustomTextFieldState extends State<CustomTextField> {
-  bool _obscureText = true;
-
-  @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: widget.controller,
-      decoration: InputDecoration(
-        labelText: widget.labelText,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
-        suffixIcon: widget.isPasswordField
-            ? IconButton(
-                icon: Icon(
-                  _obscureText ? Icons.visibility : Icons.visibility_off,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _obscureText = !_obscureText;
-                  });
-                },
-              )
-            : null,
+    return CupertinoTextField(
+      controller: controller,
+      placeholder: placeholder,
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      prefix: Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: prefixIcon,
       ),
-      obscureText: widget.isPasswordField ? _obscureText : false,
-      validator: widget.validator,
+      decoration: BoxDecoration(
+        border: Border.all(color: CupertinoColors.systemGrey4),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      keyboardType: keyboardType,
+      textInputAction: textInputAction,
+      obscureText: obscureText,
     );
   }
 }

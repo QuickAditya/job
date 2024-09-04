@@ -11,9 +11,11 @@ import '../models/user_model.dart';
 class AuthController with ChangeNotifier {
   final AuthRepo _authRepo = GetIt.instance<AuthRepo>();
   final getStorage = GetIt.instance<GetStorage>();
-
+  bool isloading = false;
   Future<Either<String, bool>> login(String email, String password) async {
     try {
+      isloading = true;
+      notifyListeners();
       final response = await _authRepo.login(email, password);
       log("${response.data}", name: 'RAW RESPONSE');
       if (response.statusCode == 200) {
@@ -25,18 +27,24 @@ class AuthController with ChangeNotifier {
         getStorage.write('token', responseModel.items.token);
         getStorage.write('userId', responseModel.items.id);
         getStorage.write('isLogin', true);
+
         return const Right(true);
       } else {
         return const Left('Login failed');
       }
     } catch (e) {
       return const Left('Login failed');
+    } finally {
+      isloading = false;
+      notifyListeners();
     }
   }
 
   Future<Either<String, bool>> signup(
       String name, String email, String password, String number) async {
     try {
+      isloading = true;
+      notifyListeners();
       final response = await _authRepo.signup(name, email, password, number);
       log("${response.data}", name: 'RAW RESPONSE');
       if (response.statusCode == 200) {
@@ -55,6 +63,9 @@ class AuthController with ChangeNotifier {
       }
     } catch (e) {
       return const Left('Signup failed');
+    } finally {
+      isloading = false;
+      notifyListeners();
     }
   }
 

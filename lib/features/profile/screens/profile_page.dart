@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
@@ -63,7 +65,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final email = getStorage.read<String>('email') ?? 'No email available';
     final name = getStorage.read<String>('name') ?? 'No name available';
     final number = getStorage.read<String>('number') ?? 'No name available';
-
+    //log('saveJobList length: ' + getStorage.read('savedJobs').toString());
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(
         middle: Text('Profile'),
@@ -75,11 +77,16 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Profile',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushReplacementNamed(context, '/uprofile');
+                },
+                child: const Text(
+                  'Profile',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
