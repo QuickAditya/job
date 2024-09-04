@@ -214,7 +214,19 @@ class JobCard extends StatelessWidget {
     bool isDarkMode = brightness == Brightness.dark;
     final homeController = Provider.of<HomeController>(context, listen: false);
     final getStorage = GetIt.instance<GetStorage>();
-    List<String> savedJobIds;
+
+    // Fetch the saved job IDs from GetStorage
+    dynamic savedJobData = getStorage.read('savejob');
+    List<String> savedJobIds = [];
+
+    if (savedJobData is String) {
+      savedJobIds = [savedJobData];
+    } else if (savedJobData is List) {
+      savedJobIds = List<String>.from(savedJobData);
+    }
+
+    bool isSaved = savedJobIds.contains(job.jobId.toString());
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
       decoration: BoxDecoration(
@@ -241,15 +253,12 @@ class JobCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     job.jobTitle ?? 'No Title',
-                    overflow: TextOverflow
-                        .ellipsis, // Clip the text without ellipsis if it overflows
+                    overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     softWrap: false,
                     style: const TextStyle(
                       fontSize: 22.0,
                       fontWeight: FontWeight.bold,
-                      // color:
-                      //     isDarkMode ? CupertinoColors.white : CupertinoColors.black,
                     ),
                   ),
                 ),
@@ -260,66 +269,61 @@ class JobCard extends StatelessWidget {
                         if (job.jobId != null) {
                           log('save job');
 
-                          // Attempt to read the stored job IDs
-                          dynamic savedJobData = getStorage.read('savejob');
-
-                          if (savedJobData is String) {
-                            // If the stored data is a string, convert it to a list
-                            savedJobIds = [savedJobData];
-                            log('savedJobData string: ' +
-                                savedJobData.toString());
-                          } else if (savedJobData is List) {
-                            // If the stored data is already a list, cast it to List<String>
-                            savedJobIds = List<String>.from(savedJobData);
-                            log('savedJobData List: ' +
-                                savedJobData.toString());
-                          } else {
-                            // If nothing is stored, initialize an empty list
-                            savedJobIds = [];
-                            log('savedJobData Emptey: : ' +
-                                savedJobData.toString());
+                          if (!isSaved) {
+                            savedJobIds.add(job.jobId.toString());
+                            getStorage.write('savejob', savedJobIds);
                           }
-
-                          // Add the new job ID to the list
-                          savedJobIds.add(job.jobId.toString());
-
-                          // Store the updated list back to GetStorage
-                          getStorage.write('savejob', savedJobIds);
 
                           log('stored job IDs: ' + savedJobIds.toString());
                           log('stored job IDs length: ' +
                               savedJobIds.length.toString());
+
+                          // Force a rebuild to update the UI
+                          (context as Element).markNeedsBuild();
                         }
                       },
                       child: Container(
-                        padding: EdgeInsets.all(6),
-                        height: 27,
-                        width: 27,
-                        decoration: ShapeDecoration(
-                            color: Color.fromARGB(255, 20, 82, 181),
+                          // padding: const EdgeInsets.all(5),
+                          height: 30,
+                          width: 30,
+                          decoration: ShapeDecoration(
+                            color: const Color.fromARGB(255, 20, 82, 181),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24))),
-                        child: Image(
-                          image: AssetImage('assets/images/save.png'),
-                          fit: BoxFit.cover,
-                          //  height: 5,
-                        ),
-                      ),
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          ),
+                          child: isSaved
+                              ?
+                              //  Padding(
+                              //     padding: const EdgeInsets.all(8.0),
+                              //     child: const Image(
+                              //       image: AssetImage('assets/images/save.png'),
+                              //       fit: BoxFit.cover,
+                              //     ),
+                              //   )
+                              const Icon(
+                                  CupertinoIcons.bookmark_fill,
+                                  color: CupertinoColors.white,
+                                )
+                              : const Icon(
+                                  CupertinoIcons.bookmark,
+                                  color: CupertinoColors.white,
+                                )),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
+                    const SizedBox(width: 10),
                     GestureDetector(
                       onTap: () {},
                       child: Container(
-                        padding: EdgeInsets.all(6),
+                        padding: const EdgeInsets.all(6),
                         height: 27,
                         width: 27,
                         decoration: ShapeDecoration(
-                            color: Color.fromARGB(255, 20, 82, 181),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24))),
-                        child: Image(
+                          color: const Color.fromARGB(255, 20, 82, 181),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                        ),
+                        child: const Image(
                           image: AssetImage('assets/images/share.png'),
                           fit: BoxFit.cover,
                         ),
@@ -334,7 +338,6 @@ class JobCard extends StatelessWidget {
               job.description ?? 'No Description',
               style: const TextStyle(
                 fontSize: 16.0,
-                // color: CupertinoColors.systemGrey3,
               ),
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
@@ -350,7 +353,6 @@ class JobCard extends StatelessWidget {
                     'Location: ${job.location ?? 'Not Specified'}',
                     style: const TextStyle(
                       fontSize: 14.0,
-                      // color: CupertinoColors.systemGrey,
                     ),
                   ),
                 ),
@@ -367,7 +369,6 @@ class JobCard extends StatelessWidget {
                     'Job Type: ${job.jobType ?? 'Not Specified'}',
                     style: const TextStyle(
                       fontSize: 14.0,
-                      // color: CupertinoColors.systemGrey,
                     ),
                   ),
                 ),
@@ -384,7 +385,6 @@ class JobCard extends StatelessWidget {
                     'Experience: ${job.minExperience ?? 'N/A'} - ${job.maxExperience ?? 'N/A'}',
                     style: const TextStyle(
                       fontSize: 14.0,
-                      // color: CupertinoColors.systemGrey,
                     ),
                   ),
                 ),
@@ -395,28 +395,10 @@ class JobCard extends StatelessWidget {
               SkillsSection(skills: job.skills!),
             const SizedBox(height: 16.0),
             if (job.jobReferralUrl != null && job.jobReferralUrl!.isNotEmpty)
-              // SizedBox(
-              //   width: double.infinity,
-              //   child: CupertinoButton.filled(
-              //     onPressed: () async {
-              //       if (!await launchUrl(Uri.parse(job.jobReferralUrl!))) {
-              //         print("Invalid URL");
-              //       }
-              //     },
-              //     child: const Text(
-              //       'Apply Now',
-              //       style: TextStyle(
-              //         fontSize: 16.0,
-              //         fontWeight: FontWeight.bold,
-              //         color: CupertinoColors.white,
-              //       ),
-              //     ),
-              //   ),
-              // ),
               CustomButton2(
                 width: double.infinity,
                 text: 'Apply Now',
-                textStyle: TextStyle(
+                textStyle: const TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
                   color: CupertinoColors.white,
