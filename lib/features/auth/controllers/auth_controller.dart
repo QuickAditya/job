@@ -9,12 +9,14 @@ import 'package:get_it/get_it.dart';
 import '../models/user_model.dart';
 
 class AuthController with ChangeNotifier {
-   AuthRepo authRepo = GetIt.instance<AuthRepo>();
-   GetStorage getStorage = GetIt.instance<GetStorage>();
-
-  Future<Either<dynamic, bool>> login(String email, String password) async {
+  final AuthRepo _authRepo = GetIt.instance<AuthRepo>();
+  final getStorage = GetIt.instance<GetStorage>();
+  bool isloading = false;
+  Future<Either<String, bool>> login(String email, String password) async {
     try {
-      final response = await authRepo.login(email, password);
+      isloading = true;
+      notifyListeners();
+      final response = await _authRepo.login(email, password);
       log("${response.data}", name: 'RAW RESPONSE');
       if (response.statusCode == 200) {
         final responseModel = RegisterResponseModel.fromJson(response.data);
@@ -25,19 +27,25 @@ class AuthController with ChangeNotifier {
         getStorage.write('token', responseModel.items.token);
         getStorage.write('userId', responseModel.items.id);
         getStorage.write('isLogin', true);
+
         return const Right(true);
       } else {
         return const Left('Login failed');
       }
     } catch (e) {
       return const Left('Login failed');
+    } finally {
+      isloading = false;
+      notifyListeners();
     }
   }
 
   Future<Either<String, bool>> signup(
       String name, String email, String password, String number) async {
     try {
-      final response = await authRepo.signup(name, email, password, number);
+      isloading = true;
+      notifyListeners();
+      final response = await _authRepo.signup(name, email, password, number);
       log("${response.data}", name: 'RAW RESPONSE');
       if (response.statusCode == 200) {
         final responseModel = RegisterResponseModel.fromJson(response.data);
@@ -55,13 +63,16 @@ class AuthController with ChangeNotifier {
       }
     } catch (e) {
       return const Left('Signup failed');
+    } finally {
+      isloading = false;
+      notifyListeners();
     }
   }
 
   Future<Either<String, bool>> fetchProfile() async {
     try {
       String email = getStorage.read('email');
-      final response = await authRepo.fetchProfile(email);
+      final response = await _authRepo.fetchProfile(email);
       log("${response.data}", name: 'RAW RESPONSE');
       if (response.statusCode == 200) {
         final responseModel = RegisterResponseModel.fromJson(response.data);
