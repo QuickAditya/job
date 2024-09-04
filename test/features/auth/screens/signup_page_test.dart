@@ -11,7 +11,8 @@ class MockAuthController extends Mock implements AuthController {}
 
 void main() {
     group('SignUp Page', () {
-
+ 
+ 
   testWidgets('Signup page displays correctly and has all necessary fields', (tester) async {
     final mockAuthController = MockAuthController();
 
