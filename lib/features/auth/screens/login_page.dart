@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 50,
                   ),
-                  const Text("TO MY JOBS"),
+                  const Text("JOB PORTAL"),
                   const SizedBox(
                     height: 50,
                   ),

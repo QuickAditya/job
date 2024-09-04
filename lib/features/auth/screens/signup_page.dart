@@ -41,7 +41,7 @@ class _SignupPageState extends State<SignupPage> {
                     const SizedBox(
                       height: 50,
                     ),
-                    const Text("TO MY JOBS"),
+                    const Text("JOB PORTAL"),
                     const SizedBox(
                       height: 50,
                     ),

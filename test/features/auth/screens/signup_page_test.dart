@@ -25,7 +25,7 @@ void main() {
     );
 
     // Verify the presence of UI elements
-    expect(find.text('TO MY JOBS'), findsOneWidget);
+    expect(find.text('JOB PORTAL'), findsOneWidget);
     expect(find.byKey(const Key('signup-name-text-field')), findsOneWidget);
     expect(find.byKey(const Key('signup-number-text-field')), findsOneWidget);
     expect(find.byKey(const Key('signup-email-text-field')), findsOneWidget);
