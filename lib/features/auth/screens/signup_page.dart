@@ -174,16 +174,16 @@ class _SignupPageState extends State<SignupPage> {
                               height: 50,
                             ),
 
-                            CustomCupertinoTextField(
-                              key: Key('signup-name-text-field'),
-                              controller: nameController,
-                              placeholder: 'Your Name',
-                              prefixIcon: Icon(
-                                Icons.person,
-                                color: Color(0xffC5C1C1),
-                              ),
-                            ),
-                            const SizedBox(height: 20),
+                            // CustomCupertinoTextField(
+                            //   key: Key('signup-name-text-field'),
+                            //   controller: nameController,
+                            //   placeholder: 'Your Name',
+                            //   prefixIcon: Icon(
+                            //     Icons.person,
+                            //     color: Color(0xffC5C1C1),
+                            //   ),
+                            // ),
+                            // const SizedBox(height: 20),
 
                             // CupertinoTextField(
                             //   key: Key('signup-number-text-field'),
