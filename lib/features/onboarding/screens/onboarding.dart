@@ -85,12 +85,6 @@ class _OnBoardingState extends State<OnBoarding> {
                         // fit: BoxFit.fill,
                         height: siz.height * 0.5,
                       ),
-                      // SizedBox(
-                      //   height: 10,
-                      // ),
-                      // SizedBox(
-                      //   height: 5,
-                      // ),
                       Container(
                         // padding: EdgeInsets.symmetric(horizontal: 5),
                         alignment: Alignment.center,
@@ -170,40 +164,40 @@ class _OnBoardingState extends State<OnBoarding> {
   }
 }
 
-class Slider extends StatelessWidget {
-  String image, title;
+// class Slider extends StatelessWidget {
+//   String image, title;
 
-  //Constructor created
-  Slider({
-    required this.image,
-    required this.title,
-  });
+//   //Constructor created
+//   Slider({
+//     required this.image,
+//     required this.title,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    var siz = MediaQuery.of(context).size;
-    return Expanded(
-      child: Container(
-        // column containing image
-        // title and description
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image(
-              image: AssetImage(image),
-              height: siz.height * 3,
-              width: siz.width,
-              fit: BoxFit.contain,
-            ),
-            SizedBox(height: 20),
-            Text(
-              title,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(height: 12),
-          ],
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     var siz = MediaQuery.of(context).size;
+//     return Expanded(
+//       child: Container(
+//         // column containing image
+//         // title and description
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Image(
+//               image: AssetImage(image),
+//               height: siz.height * 3,
+//               width: siz.width,
+//               fit: BoxFit.contain,
+//             ),
+//             SizedBox(height: 20),
+//             Text(
+//               title,
+//               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+//             ),
+//             SizedBox(height: 12),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
