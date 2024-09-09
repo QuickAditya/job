@@ -3,17 +3,20 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
-import 'dart:ui' as _i10;
+import 'dart:async' as _i6;
+import 'dart:ui' as _i13;
 
 import 'package:dio/dio.dart' as _i2;
-import 'package:either_dart/either.dart' as _i8;
-import 'package:flutter/cupertino.dart' as _i7;
-import 'package:job/features/home/controllers/home_controller.dart' as _i5;
-import 'package:job/features/home/models/job_model.dart' as _i6;
-import 'package:job/features/home/repos/home_repo.dart' as _i3;
+import 'package:either_dart/either.dart' as _i11;
+import 'package:flutter/cupertino.dart' as _i10;
+import 'package:get/utils.dart' as _i4;
+import 'package:get_storage/get_storage.dart' as _i3;
+import 'package:job/features/home/controllers/home_controller.dart' as _i7;
+import 'package:job/features/home/models/job_model.dart' as _i8;
+import 'package:job/features/home/models/jobbybobId.dart' as _i9;
+import 'package:job/features/home/repos/home_repo.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i9;
+import 'package:mockito/src/dummies.dart' as _i12;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -38,16 +41,57 @@ class _FakeResponse_0<T> extends _i1.SmartFake implements _i2.Response<T> {
         );
 }
 
+class _FakeGetStorage_1 extends _i1.SmartFake implements _i3.GetStorage {
+  _FakeGetStorage_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeMicrotask_2 extends _i1.SmartFake implements _i3.Microtask {
+  _FakeMicrotask_2(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeGetQueue_3 extends _i1.SmartFake implements _i4.GetQueue {
+  _FakeGetQueue_3(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeValueStorage_4<T> extends _i1.SmartFake
+    implements _i3.ValueStorage<T> {
+  _FakeValueStorage_4(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [HomeRepo].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockHomeRepo extends _i1.Mock implements _i3.HomeRepo {
+class MockHomeRepo extends _i1.Mock implements _i5.HomeRepo {
   MockHomeRepo() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<_i2.Response<dynamic>> login(
+  _i6.Future<_i2.Response<dynamic>> login(
     String? email,
     String? password,
   ) =>
@@ -60,7 +104,7 @@ class MockHomeRepo extends _i1.Mock implements _i3.HomeRepo {
           ],
         ),
         returnValue:
-            _i4.Future<_i2.Response<dynamic>>.value(_FakeResponse_0<dynamic>(
+            _i6.Future<_i2.Response<dynamic>>.value(_FakeResponse_0<dynamic>(
           this,
           Invocation.method(
             #login,
@@ -70,10 +114,10 @@ class MockHomeRepo extends _i1.Mock implements _i3.HomeRepo {
             ],
           ),
         )),
-      ) as _i4.Future<_i2.Response<dynamic>>);
+      ) as _i6.Future<_i2.Response<dynamic>>);
 
   @override
-  _i4.Future<_i2.Response<dynamic>> signup(
+  _i6.Future<_i2.Response<dynamic>> signup(
     String? name,
     String? email,
     String? password,
@@ -88,7 +132,7 @@ class MockHomeRepo extends _i1.Mock implements _i3.HomeRepo {
           ],
         ),
         returnValue:
-            _i4.Future<_i2.Response<dynamic>>.value(_FakeResponse_0<dynamic>(
+            _i6.Future<_i2.Response<dynamic>>.value(_FakeResponse_0<dynamic>(
           this,
           Invocation.method(
             #signup,
@@ -99,19 +143,19 @@ class MockHomeRepo extends _i1.Mock implements _i3.HomeRepo {
             ],
           ),
         )),
-      ) as _i4.Future<_i2.Response<dynamic>>);
+      ) as _i6.Future<_i2.Response<dynamic>>);
 }
 
 /// A class which mocks [HomeController].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockHomeController extends _i1.Mock implements _i5.HomeController {
+class MockHomeController extends _i1.Mock implements _i7.HomeController {
   MockHomeController() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  set jobModel(_i6.JobModel? _jobModel) => super.noSuchMethod(
+  set jobModel(_i8.JobModel? _jobModel) => super.noSuchMethod(
         Invocation.setter(
           #jobModel,
           _jobModel,
@@ -165,6 +209,54 @@ class MockHomeController extends _i1.Mock implements _i5.HomeController {
       );
 
   @override
+  List<_i8.Job> get saveJobList => (super.noSuchMethod(
+        Invocation.getter(#saveJobList),
+        returnValue: <_i8.Job>[],
+      ) as List<_i8.Job>);
+
+  @override
+  set saveJobList(List<_i8.Job>? _saveJobList) => super.noSuchMethod(
+        Invocation.setter(
+          #saveJobList,
+          _saveJobList,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i3.GetStorage get getStorage => (super.noSuchMethod(
+        Invocation.getter(#getStorage),
+        returnValue: _FakeGetStorage_1(
+          this,
+          Invocation.getter(#getStorage),
+        ),
+      ) as _i3.GetStorage);
+
+  @override
+  List<_i8.Job> get JobList => (super.noSuchMethod(
+        Invocation.getter(#JobList),
+        returnValue: <_i8.Job>[],
+      ) as List<_i8.Job>);
+
+  @override
+  set JobList(List<_i8.Job>? _JobList) => super.noSuchMethod(
+        Invocation.setter(
+          #JobList,
+          _JobList,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  set JobListbyID(_i9.JobData? _JobListbyID) => super.noSuchMethod(
+        Invocation.setter(
+          #JobListbyID,
+          _JobListbyID,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   bool get hasListeners => (super.noSuchMethod(
         Invocation.getter(#hasListeners),
         returnValue: false,
@@ -183,30 +275,84 @@ class MockHomeController extends _i1.Mock implements _i5.HomeController {
       ));
 
   @override
-  dynamic fetchHomePageData(_i7.BuildContext? context) =>
+  dynamic fetchHomePageData(_i10.BuildContext? context) =>
       super.noSuchMethod(Invocation.method(
         #fetchHomePageData,
         [context],
       ));
 
   @override
-  _i4.Future<_i8.Either<String, bool>> fetchJobData() => (super.noSuchMethod(
+  void addtoSave(_i8.Job? savedjob) => super.noSuchMethod(
+        Invocation.method(
+          #addtoSave,
+          [savedjob],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void saveToStorage(List<dynamic>? savedJobsJson) => super.noSuchMethod(
+        Invocation.method(
+          #saveToStorage,
+          [savedJobsJson],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void loadSavedJobs() => super.noSuchMethod(
+        Invocation.method(
+          #loadSavedJobs,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removeJob(_i8.Job? job) => super.noSuchMethod(
+        Invocation.method(
+          #removeJob,
+          [job],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i6.Future<_i11.Either<String, bool>> fetchJobData() => (super.noSuchMethod(
         Invocation.method(
           #fetchJobData,
           [],
         ),
-        returnValue: _i4.Future<_i8.Either<String, bool>>.value(
-            _i9.dummyValue<_i8.Either<String, bool>>(
+        returnValue: _i6.Future<_i11.Either<String, bool>>.value(
+            _i12.dummyValue<_i11.Either<String, bool>>(
           this,
           Invocation.method(
             #fetchJobData,
             [],
           ),
         )),
-      ) as _i4.Future<_i8.Either<String, bool>>);
+      ) as _i6.Future<_i11.Either<String, bool>>);
 
   @override
-  void addListener(_i10.VoidCallback? listener) => super.noSuchMethod(
+  _i6.Future<dynamic> jobcardbyJobid(int? jobId) => (super.noSuchMethod(
+        Invocation.method(
+          #jobcardbyJobid,
+          [jobId],
+        ),
+        returnValue: _i6.Future<dynamic>.value(),
+      ) as _i6.Future<dynamic>);
+
+  @override
+  _i6.Future<_i9.JobData?> jobcardbyJobidad(int? jobId) => (super.noSuchMethod(
+        Invocation.method(
+          #jobcardbyJobidad,
+          [jobId],
+        ),
+        returnValue: _i6.Future<_i9.JobData?>.value(),
+      ) as _i6.Future<_i9.JobData?>);
+
+  @override
+  void addListener(_i13.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
           [listener],
@@ -215,7 +361,7 @@ class MockHomeController extends _i1.Mock implements _i5.HomeController {
       );
 
   @override
-  void removeListener(_i10.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i13.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #removeListener,
           [listener],
@@ -240,4 +386,220 @@ class MockHomeController extends _i1.Mock implements _i5.HomeController {
         ),
         returnValueForMissingStub: null,
       );
+}
+
+/// A class which mocks [GetStorage].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetStorage extends _i1.Mock implements _i3.GetStorage {
+  MockGetStorage() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.Microtask get microtask => (super.noSuchMethod(
+        Invocation.getter(#microtask),
+        returnValue: _FakeMicrotask_2(
+          this,
+          Invocation.getter(#microtask),
+        ),
+      ) as _i3.Microtask);
+
+  @override
+  _i4.GetQueue get queue => (super.noSuchMethod(
+        Invocation.getter(#queue),
+        returnValue: _FakeGetQueue_3(
+          this,
+          Invocation.getter(#queue),
+        ),
+      ) as _i4.GetQueue);
+
+  @override
+  set queue(_i4.GetQueue? _queue) => super.noSuchMethod(
+        Invocation.setter(
+          #queue,
+          _queue,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i6.Future<bool> get initStorage => (super.noSuchMethod(
+        Invocation.getter(#initStorage),
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
+
+  @override
+  set initStorage(_i6.Future<bool>? _initStorage) => super.noSuchMethod(
+        Invocation.setter(
+          #initStorage,
+          _initStorage,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  Map<String, dynamic> get changes => (super.noSuchMethod(
+        Invocation.getter(#changes),
+        returnValue: <String, dynamic>{},
+      ) as Map<String, dynamic>);
+
+  @override
+  _i3.ValueStorage<Map<String, dynamic>> get listenable => (super.noSuchMethod(
+        Invocation.getter(#listenable),
+        returnValue: _FakeValueStorage_4<Map<String, dynamic>>(
+          this,
+          Invocation.getter(#listenable),
+        ),
+      ) as _i3.ValueStorage<Map<String, dynamic>>);
+
+  @override
+  T? read<T>(String? key) => (super.noSuchMethod(Invocation.method(
+        #read,
+        [key],
+      )) as T?);
+
+  @override
+  T getKeys<T>() => (super.noSuchMethod(
+        Invocation.method(
+          #getKeys,
+          [],
+        ),
+        returnValue: _i12.dummyValue<T>(
+          this,
+          Invocation.method(
+            #getKeys,
+            [],
+          ),
+        ),
+      ) as T);
+
+  @override
+  T getValues<T>() => (super.noSuchMethod(
+        Invocation.method(
+          #getValues,
+          [],
+        ),
+        returnValue: _i12.dummyValue<T>(
+          this,
+          Invocation.method(
+            #getValues,
+            [],
+          ),
+        ),
+      ) as T);
+
+  @override
+  bool hasData(String? key) => (super.noSuchMethod(
+        Invocation.method(
+          #hasData,
+          [key],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  _i13.VoidCallback listen(_i13.VoidCallback? value) => (super.noSuchMethod(
+        Invocation.method(
+          #listen,
+          [value],
+        ),
+        returnValue: () {},
+      ) as _i13.VoidCallback);
+
+  @override
+  _i13.VoidCallback listenKey(
+    String? key,
+    _i10.ValueSetter<dynamic>? callback,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #listenKey,
+          [
+            key,
+            callback,
+          ],
+        ),
+        returnValue: () {},
+      ) as _i13.VoidCallback);
+
+  @override
+  _i6.Future<void> write(
+    String? key,
+    dynamic value,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #write,
+          [
+            key,
+            value,
+          ],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  void writeInMemory(
+    String? key,
+    dynamic value,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #writeInMemory,
+          [
+            key,
+            value,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i6.Future<void> writeIfNull(
+    String? key,
+    dynamic value,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #writeIfNull,
+          [
+            key,
+            value,
+          ],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> remove(String? key) => (super.noSuchMethod(
+        Invocation.method(
+          #remove,
+          [key],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> erase() => (super.noSuchMethod(
+        Invocation.method(
+          #erase,
+          [],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> save() => (super.noSuchMethod(
+        Invocation.method(
+          #save,
+          [],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 }

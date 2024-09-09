@@ -108,15 +108,6 @@ class MockAuthController extends _i1.Mock implements _i6.AuthController {
       ) as _i2.AuthRepo);
 
   @override
-  set authRepo(_i2.AuthRepo? _authRepo) => super.noSuchMethod(
-        Invocation.setter(
-          #authRepo,
-          _authRepo,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
   _i3.GetStorage get getStorage => (super.noSuchMethod(
         Invocation.getter(#getStorage),
         returnValue: _FakeGetStorage_1(
@@ -126,10 +117,16 @@ class MockAuthController extends _i1.Mock implements _i6.AuthController {
       ) as _i3.GetStorage);
 
   @override
-  set getStorage(_i3.GetStorage? _getStorage) => super.noSuchMethod(
+  bool get isloading => (super.noSuchMethod(
+        Invocation.getter(#isloading),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  set isloading(bool? _isloading) => super.noSuchMethod(
         Invocation.setter(
-          #getStorage,
-          _getStorage,
+          #isloading,
+          _isloading,
         ),
         returnValueForMissingStub: null,
       );
@@ -141,12 +138,10 @@ class MockAuthController extends _i1.Mock implements _i6.AuthController {
       ) as bool);
 
   @override
-  _i7.Future<_i8.Either<dynamic, bool>> login(
+  _i7.Future<_i8.Either<String, bool>> login(
     String? email,
-    String? password, {
-    _i2.AuthRepo? mocRepo,
-    _i3.GetStorage? mocStorage,
-  }) =>
+    String? password,
+  ) =>
       (super.noSuchMethod(
         Invocation.method(
           #login,
@@ -154,13 +149,9 @@ class MockAuthController extends _i1.Mock implements _i6.AuthController {
             email,
             password,
           ],
-          {
-            #mocRepo: mocRepo,
-            #mocStorage: mocStorage,
-          },
         ),
-        returnValue: _i7.Future<_i8.Either<dynamic, bool>>.value(
-            _i9.dummyValue<_i8.Either<dynamic, bool>>(
+        returnValue: _i7.Future<_i8.Either<String, bool>>.value(
+            _i9.dummyValue<_i8.Either<String, bool>>(
           this,
           Invocation.method(
             #login,
@@ -168,13 +159,9 @@ class MockAuthController extends _i1.Mock implements _i6.AuthController {
               email,
               password,
             ],
-            {
-              #mocRepo: mocRepo,
-              #mocStorage: mocStorage,
-            },
           ),
         )),
-      ) as _i7.Future<_i8.Either<dynamic, bool>>);
+      ) as _i7.Future<_i8.Either<String, bool>>);
 
   @override
   _i7.Future<_i8.Either<String, bool>> signup(

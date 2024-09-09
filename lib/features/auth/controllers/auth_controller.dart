@@ -9,14 +9,14 @@ import 'package:get_it/get_it.dart';
 import '../models/user_model.dart';
 
 class AuthController with ChangeNotifier {
-  final AuthRepo _authRepo = GetIt.instance<AuthRepo>();
+  final AuthRepo authRepo = GetIt.instance<AuthRepo>();
   final getStorage = GetIt.instance<GetStorage>();
   bool isloading = false;
   Future<Either<String, bool>> login(String email, String password) async {
     try {
       isloading = true;
       notifyListeners();
-      final response = await _authRepo.login(email, password);
+      final response = await authRepo.login(email, password);
       log("${response.data}", name: 'RAW RESPONSE');
       if (response.statusCode == 200) {
         final responseModel = RegisterResponseModel.fromJson(response.data);
@@ -45,7 +45,7 @@ class AuthController with ChangeNotifier {
     try {
       isloading = true;
       notifyListeners();
-      final response = await _authRepo.signup(name, email, password, number);
+      final response = await authRepo.signup(name, email, password, number);
       log("${response.data}", name: 'RAW RESPONSE');
       if (response.statusCode == 200) {
         final responseModel = RegisterResponseModel.fromJson(response.data);
@@ -72,7 +72,7 @@ class AuthController with ChangeNotifier {
   Future<Either<String, bool>> fetchProfile() async {
     try {
       String email = getStorage.read('email');
-      final response = await _authRepo.fetchProfile(email);
+      final response = await authRepo.fetchProfile(email);
       log("${response.data}", name: 'RAW RESPONSE');
       if (response.statusCode == 200) {
         final responseModel = RegisterResponseModel.fromJson(response.data);

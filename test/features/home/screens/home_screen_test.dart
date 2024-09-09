@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:job/features/home/repos/home_repo.dart';
 import 'package:job/features/home/screens/home_screen.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 import 'package:job/features/home/controllers/home_controller.dart';
-import 'package:job/features/home/models/job_model.dart';
+import 'package:job/features/home/models/job_model.dart' as jobmodel;
 
 import 'home_screen_test.mocks.dart';
 
@@ -14,15 +16,24 @@ import 'home_screen_test.mocks.dart';
 
 // class MockHomeRepo extends Mock implements HomeRepo {}
 
-@GenerateMocks([HomeRepo, HomeController])
+@GenerateMocks([HomeRepo, HomeController,GetStorage])
 void main() {
   // MockHomeRepo mockHomeRepo;
   late HomeController mockHomeController;
+  late MockGetStorage mockGetStorage;
 
   setUp(() {
-    // mockHomeRepo = MockHomeRepo();
+    // Initialize mocks
     mockHomeController = MockHomeController();
-    // homeController.homeRepo = mockHomeRepo; // Use the mock in the controller
+    mockGetStorage = MockGetStorage();
+    // mockHomeRepo = MockHomeRepo();
+
+    // Register mocks with GetIt
+    GetIt.instance.registerSingleton<GetStorage>(mockGetStorage);
+    // GetIt.instance.registerSingleton<HomeRepo>(mockHomeRepo);
+
+    // Optionally, set up the HomeController to use the mock HomeRepo
+
   });
 
   Widget createHomePageWidget() {
@@ -67,10 +78,10 @@ void main() {
     testWidgets('displays job cards when data is loaded',
         (WidgetTester tester) async {
       // Arrange
-      final jobModel = JobModel(
-        data: Data(
+      final jobModel =jobmodel. JobModel(
+        data:jobmodel. Data(
           job: [
-            Job(
+            jobmodel.Job(
               jobTitle: 'Software Engineer',
               description: 'Develop awesome software!',
               location: 'San Francisco',
@@ -78,7 +89,7 @@ void main() {
               minExperience: '2 years',
               maxExperience: '5 years',
               skills: [
-                Skills(skillName: 'Flutter', years: '2', level: 'Intermediate'),
+              jobmodel.  Skills(skillName: 'Flutter', years: '2', level: 'Intermediate'),
               ],
               jobReferralUrl: 'https://example.com/apply',
             ),
@@ -99,10 +110,10 @@ void main() {
 
     testWidgets('refresh button works', (WidgetTester tester) async {
       // Arrange
-      final jobModel = JobModel(
-        data: Data(
+      final jobModel =jobmodel. JobModel(
+        data:jobmodel. Data(
           job: [
-            Job(
+           jobmodel. Job(
               jobTitle: 'Software Engineer',
               description: 'Develop awesome software!',
               location: 'San Francisco',
@@ -110,7 +121,7 @@ void main() {
               minExperience: '2 years',
               maxExperience: '5 years',
               skills: [
-                Skills(skillName: 'Flutter', years: '2', level: 'Intermediate'),
+              jobmodel.  Skills(skillName: 'Flutter', years: '2', level: 'Intermediate'),
               ],
               jobReferralUrl: 'https://example.com/apply',
             ),
@@ -176,7 +187,7 @@ void main() {
       };
 
       // Act
-      final jobModel = JobModel.fromJson(json);
+      final jobModel =jobmodel. JobModel.fromJson(json);
       final jsonOutput = jobModel.toJson();
 
       // Assert
@@ -219,7 +230,7 @@ void main() {
       };
 
       // Act
-      final data = Data.fromJson(json);
+      final data =jobmodel. Data.fromJson(json);
       final jsonOutput = data.toJson();
 
       // Assert
@@ -257,7 +268,7 @@ void main() {
       };
 
       // Act
-      final job = Job.fromJson(json);
+      final job =jobmodel. Job.fromJson(json);
       final jsonOutput = job.toJson();
 
       // Assert
@@ -273,7 +284,7 @@ void main() {
       };
 
       // Act
-      final skills = Skills.fromJson(json);
+      final skills =jobmodel. Skills.fromJson(json);
       final jsonOutput = skills.toJson();
 
       // Assert
@@ -287,7 +298,7 @@ void main() {
       };
 
       // Act
-      final positions = Positions.fromJson(json);
+      final positions =jobmodel. Positions.fromJson(json);
       final jsonOutput = positions.toJson();
 
       // Assert

@@ -71,6 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
 
                           CustomCupertinoTextField(
+                            key:Key('login-email-text-field'),
                             controller: emailController,
                             placeholder: 'Email Address',
                             prefixIcon: Icon(
@@ -83,6 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                             alignment: Alignment.centerRight,
                             children: [
                               CupertinoTextField(
+                                key: Key('login-password-text-field'),
                                 onChanged: (value) {},
                                 prefix: Padding(
                                   padding: EdgeInsets.only(left: 5),
@@ -106,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                                 textInputAction: TextInputAction.done,
                               ),
                               CupertinoButton(
+                                key: Key('login-eye-button'),
                                 padding: EdgeInsets.zero,
                                 child: Icon(
                                   _obscureText
@@ -178,6 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                           //   },
                           // ),
                           CustomButton2(
+                          key: Key('login-button'),
                             width: s.width * 0.8,
                             onPressed: () async {
                               if ((_formKey.currentState?.validate() ??
@@ -232,6 +236,7 @@ class _LoginPageState extends State<LoginPage> {
                             height: 15,
                           ),
                           RichText(
+                            key: Key('login-to-signup-button'),
                             text: TextSpan(
                               children: [
                                 TextSpan(
@@ -240,6 +245,7 @@ class _LoginPageState extends State<LoginPage> {
                                       color: Colors.black, fontSize: 16),
                                 ),
                                 TextSpan(
+                                  
                                   text: 'SignUp',
                                   style: TextStyle(
                                     color: Colors.blue,

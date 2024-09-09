@@ -152,12 +152,13 @@ class _SignupPageState extends State<SignupPage> {
                             const SizedBox(
                               height: 50,
                             ),
-                            const Text("TO MY JOBS"),
+                            const Text('TO MY JOBS'),
                             const SizedBox(
                               height: 50,
                             ),
 
                             CustomCupertinoTextField(
+                              key: Key('signup-name-text-field'),
                               controller: nameController,
                               placeholder: 'Your Name',
                               prefixIcon: Icon(
@@ -168,6 +169,7 @@ class _SignupPageState extends State<SignupPage> {
                             const SizedBox(height: 20),
 
                             CupertinoTextField(
+                              key: Key('signup-number-text-field'),
                               keyboardType: TextInputType.number,
                               prefix: Padding(
                                 padding: EdgeInsets.only(left: 5),
@@ -192,6 +194,7 @@ class _SignupPageState extends State<SignupPage> {
                             const SizedBox(height: 20),
 
                             CustomCupertinoTextField(
+                              key: Key('signup-email-text-field'),
                               controller: emailController,
                               placeholder: 'Email Address',
                               prefixIcon: Icon(
@@ -205,6 +208,7 @@ class _SignupPageState extends State<SignupPage> {
                               alignment: Alignment.centerRight,
                               children: [
                                 CupertinoTextField(
+                                  key: Key('signup-password-text-field'),
                                   prefix: Padding(
                                     padding: EdgeInsets.only(left: 5),
                                     child: Icon(
@@ -226,6 +230,9 @@ class _SignupPageState extends State<SignupPage> {
                                   textInputAction: TextInputAction.done,
                                 ),
                                 CupertinoButton(
+                                     key:  Key('passwordVisibilityToggle'),
+
+                              // key:     Key('signup-eye-button2'),
                                   padding: EdgeInsets.zero,
                                   child: Icon(
                                     _obscureText
@@ -269,6 +276,8 @@ class _SignupPageState extends State<SignupPage> {
                                   textInputAction: TextInputAction.done,
                                 ),
                                 CupertinoButton(
+                                                key: const Key('confirmPasswordVisibilityToggle'),
+                                  // key: Key('signup-eye-button1'),
                                   padding: EdgeInsets.zero,
                                   child: Icon(
                                     obstext
@@ -344,8 +353,9 @@ class _SignupPageState extends State<SignupPage> {
                             //   },
                             // ),
                             CustomButton2(
+                              key: Key('signup-button'),
                               width: MediaQuery.of(context).size.width * 0.8,
-                              text: 'SignUp',
+                              text: 'Signup',
                               onPressed: () async {
                                 if ((_formKey.currentState?.validate() ??
                                         false) &&
@@ -405,10 +415,12 @@ class _SignupPageState extends State<SignupPage> {
                               height: 20,
                             ),
                             RichText(
+                              key: Key('signup-to-login-button'),
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: "Already have an account? ",
+                                    
+                                    text: 'Already have an account?',
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 16),
                                   ),

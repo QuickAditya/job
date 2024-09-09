@@ -182,7 +182,7 @@ class HomeController with ChangeNotifier {
     }
   }
 
-  bool isLoading = false;
+
   Future<JobData?> jobcardbyJobidad(int jobId) async {
     try {
       isLoading = true;
