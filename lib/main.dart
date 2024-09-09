@@ -1,4 +1,6 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
@@ -22,6 +24,13 @@ import 'features/home/screens/home_screen.dart';
 Future<void> main() async {
   await setup();
   runApp(MyApp());
+  // Wrap runApp with DevicePreview
+  // runApp(
+  //   DevicePreview(
+  //     enabled: !kReleaseMode, // Enable it only in debug mode
+  //     builder: (context) => MyApp(), // Wrap your app with DevicePreview
+  //   ),
+  // );
 }
 
 // Test build 2
@@ -76,19 +85,21 @@ class MyApp extends StatelessWidget {
         // ChangeNotifierProvider(create: (_) => Onboardcontroller()),
       ],
       child: CupertinoApp(
+        // useInheritedMediaQuery: true,
+        // locale: DevicePreview.locale(context),
+        // builder: DevicePreview.appBuilder,
         title: 'Flutter Demo',
         routes: {
           '/': (_) => const SplashScreen(),
           '/onboard': (_) => OnBoarding(),
-
           '/login': (_) => const LoginPage(),
           '/home': (_) => const HomePage(),
           '/signup': (_) => const SignupPage(),
           '/profile': (_) => const ProfilePage(),
-          '/uprofile': (_) => const UserProfile(),
-          '/savejobs': (_) => const SavedJobs(),
+          //'/uprofile': (_) => const UserProfile(),
+          // '/savejobs': (_) => const SavedJobs(),
 
-          '/SavedJobsbyID': (_) => const SavedJobsbyID(),
+          // '/SavedJobsbyID': (_) => const SavedJobsbyID(),
           '/savingjob': (_) => const SavingJob(),
 
           // '/': (_) => isLogin ? const HomePage() : const LoginPage(),

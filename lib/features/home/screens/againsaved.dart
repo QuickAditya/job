@@ -29,7 +29,7 @@ class _SavingJobState extends State<SavingJob> {
     });
     final getStorage = GetIt.instance<GetStorage>();
     final homeController = Provider.of<HomeController>(context, listen: false);
-
+    //retriving list of stored jobids
     List<String> savedJobs = getStorage
             .read<List<dynamic>>('savejob')
             ?.map((id) => id.toString())
@@ -161,7 +161,7 @@ class FavJobCard extends StatelessWidget {
 
                     // Remove the job ID from the list if it exists
                     savedJobIds.remove(job.jobId.toString());
-
+                    homeController.fetchJobData();
                     // Store the updated list back to GetStorage
                     getStorage.write('savejob', savedJobIds);
 

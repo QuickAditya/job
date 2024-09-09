@@ -19,9 +19,9 @@ class HomeController with ChangeNotifier {
   //   jobcardbyJobidad(216075);
   // }
 
-  SaveJobNotifier() {
-    loadSavedJobs(); // Load saved jobs when the notifier is created
-  }
+  // SaveJobNotifier() {
+  //   loadSavedJobs(); // Load saved jobs when the notifier is created
+  // }
 
   updateCurrentPage(int val) {
     currentPage = val;
@@ -41,7 +41,6 @@ class HomeController with ChangeNotifier {
     saveToStorage(saveJobList); // Save the updated list to storage
     log('stored jobID' + getStorage.read('jobID').toString());
     log('saveJobList length: ' + saveJobList.length.toString());
-
     notifyListeners();
   }
 
@@ -51,32 +50,32 @@ class HomeController with ChangeNotifier {
     log('saveJobList length: ' + savedJobsJson.length.toString());
   }
 
-  void loadSavedJobs() {
-    log('loadSavedJobs');
-    List<String>? savedJobsJson = getStorage.read<List<String>>('savedJobs');
-    if (savedJobsJson != null) {
-      saveJobList = savedJobsJson
-          .map((jobJson) => Job.fromJson(jsonDecode(jobJson)))
-          .toList();
-      notifyListeners();
-    }
-  }
+  // void loadSavedJobs() {
+  //   log('loadSavedJobs');
+  //   List<String>? savedJobsJson = getStorage.read<List<String>>('savedJobs');
+  //   if (savedJobsJson != null) {
+  //     saveJobList = savedJobsJson
+  //         .map((jobJson) => Job.fromJson(jsonDecode(jobJson)))
+  //         .toList();
+  //     notifyListeners();
+  //   }
+  // }
 
   void removeJob(Job job) {
     // saveJobList.remove(job);
-
     log('remove card');
     log('saveJobList length after removing jobcard :: ' +
         saveJobList.length.toString());
     notifyListeners();
   }
 
-  List<Job> JobList = [];
+  // List<Job> JobList = [];
   Future<Either<String, bool>> fetchJobData() async {
     try {
       var headers = {
         'Authorization':
             'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcGFydG5lcmFwaS5vcHRpbWhpcmUuY29tXC8iLCJhdWQiOiJodHRwczpcL1wvcGFydG5lcmFwaS5vcHRpbWhpcmUuY29tXC8iLCJpYXQiOjE3MjQ0OTU0ODIsIm5iZiI6MTcyNDQ5NTQ4MiwiZGF0YSI6eyJyZWZfdXNlcl9pZCI6IjQyMTAzMiIsInJlZl91c2VyX2lwIjoiNDkuNDMuNy4yMzUiLCJyZWZfZmlyc3RfbmFtZSI6IlNhZ2FyIiwicmVmX2xhc3RfbmFtZSI6Ik5lZXJhaiIsInJlZl91c2VyX2VtYWlsIjoidml0cHJvamVjdG1hbmFnZXJAeWFob28uY29tIiwicmVmX2ltYWdlIjpudWxsLCJyZWZfdXNlcl90eXBlIjoib3RoZXIifX0.7IyHBYruRUwiQ5j5vscZcZJKD28wQieifWx7zigiDQE',
+        //'Bearer ${getStorage.read('token')}',
         'Cookie': 'ci_session=41ip78h92q0a52te4gkg2vr9lrp7cf04'
       };
       var data = '''''';
@@ -91,8 +90,8 @@ class HomeController with ChangeNotifier {
       );
       if (response.statusCode == 200) {
         jobModel = JobModel.fromJson(response.data as Map<String, dynamic>);
-        JobList.addAll(jobModel!.data!.job!);
-        log('JobList  : ' + JobList.length.toString());
+        // JobList.addAll(jobModel!.data!.job!);
+        // log('JobList  : ' + JobList.length.toString());
         log(jobModel!.data!.job!.map((e) => e.jobId).toList().toString(),
             name: 'Jobs');
         notifyListeners();
@@ -105,42 +104,41 @@ class HomeController with ChangeNotifier {
     }
   }
 
-  // var savejobsList = [];
-  JobData? JobListbyID;
-  Future jobcardbyJobid(int jobId) async {
-    try {
-      var headers = {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcGFydG5lcmFwaS5vcHRpbWhpcmUuY29tXC8iLCJhdWQiOiJodHRwczpcL1wvcGFydG5lcmFwaS5vcHRpbWhpcmUuY29tXC8iLCJpYXQiOjE3MjQ0OTU0ODIsIm5iZiI6MTcyNDQ5NTQ4MiwiZGF0YSI6eyJyZWZfdXNlcl9pZCI6IjQyMTAzMiIsInJlZl91c2VyX2lwIjoiNDkuNDMuNy4yMzUiLCJyZWZfZmlyc3RfbmFtZSI6IlNhZ2FyIiwicmVmX2xhc3RfbmFtZSI6Ik5lZXJhaiIsInJlZl91c2VyX2VtYWlsIjoidml0cHJvamVjdG1hbmFnZXJAeWFob28uY29tIiwicmVmX2ltYWdlIjpudWxsLCJyZWZfdXNlcl90eXBlIjoib3RoZXIifX0.7IyHBYruRUwiQ5j5vscZcZJKD28wQieifWx7zigiDQE',
-        'Cookie': 'ci_session=41ip78h92q0a52te4gkg2vr9lrp7cf04'
-      };
-      // var data = '''''';
-      var dio = Dio();
-      var response = await dio.get(
-        'https://partnerapi.optimhire.com/v1/partner/job-description/?job_id=$jobId',
-        options: Options(
-          headers: headers,
-        ),
-      );
-      if (response.statusCode == 200) {
-        JobbyjobidModel jobModel =
-            JobbyjobidModel.fromJson(response.data as Map<String, dynamic>);
+  // JobData? JobListbyID;
+  // Future jobcardbyJobid(int jobId) async {
+  //   try {
+  //     var headers = {
+  //       'Authorization':
+  //           'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcGFydG5lcmFwaS5vcHRpbWhpcmUuY29tXC8iLCJhdWQiOiJodHRwczpcL1wvcGFydG5lcmFwaS5vcHRpbWhpcmUuY29tXC8iLCJpYXQiOjE3MjQ0OTU0ODIsIm5iZiI6MTcyNDQ5NTQ4MiwiZGF0YSI6eyJyZWZfdXNlcl9pZCI6IjQyMTAzMiIsInJlZl91c2VyX2lwIjoiNDkuNDMuNy4yMzUiLCJyZWZfZmlyc3RfbmFtZSI6IlNhZ2FyIiwicmVmX2xhc3RfbmFtZSI6Ik5lZXJhaiIsInJlZl91c2VyX2VtYWlsIjoidml0cHJvamVjdG1hbmFnZXJAeWFob28uY29tIiwicmVmX2ltYWdlIjpudWxsLCJyZWZfdXNlcl90eXBlIjoib3RoZXIifX0.7IyHBYruRUwiQ5j5vscZcZJKD28wQieifWx7zigiDQE',
+  //       'Cookie': 'ci_session=41ip78h92q0a52te4gkg2vr9lrp7cf04'
+  //     };
+  //     // var data = '''''';
+  //     var dio = Dio();
+  //     var response = await dio.get(
+  //       'https://partnerapi.optimhire.com/v1/partner/job-description/?job_id=$jobId',
+  //       options: Options(
+  //         headers: headers,
+  //       ),
+  //     );
+  //     if (response.statusCode == 200) {
+  //       JobbyjobidModel jobModel =
+  //           JobbyjobidModel.fromJson(response.data as Map<String, dynamic>);
 
-        JobListbyID = (jobModel.data ?? '') as JobData?;
+  //       JobListbyID = (jobModel.data ?? '') as JobData?;
 
-        log('JobList  : ' + JobList.length.toString());
-        // log(jobModel!.data!.job!.map((e) => e.jobId).toList().toString(),
-        //     name: 'Jobs');
-        notifyListeners();
+  //       log('JobList  : ' + JobList.length.toString());
+  //       // log(jobModel!.data!.job!.map((e) => e.jobId).toList().toString(),
+  //       //     name: 'Jobs');
+  //       notifyListeners();
 
-        return const Right(true);
-      } else {
-        return const Left('Login failed');
-      }
-    } catch (e) {
-      return const Left('Login failed');
-    }
-  }
+  //       return const Right(true);
+  //     } else {
+  //       return const Left('Login failed');
+  //     }
+  //   } catch (e) {
+  //     return const Left('Login failed');
+  //   }
+  // }
 
   bool isLoading = false;
   Future<JobData?> jobcardbyJobidad(int jobId) async {
@@ -150,6 +148,7 @@ class HomeController with ChangeNotifier {
       var headers = {
         'Authorization':
             'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcGFydG5lcmFwaS5vcHRpbWhpcmUuY29tXC8iLCJhdWQiOiJodHRwczpcL1wvcGFydG5lcmFwaS5vcHRpbWhpcmUuY29tXC8iLCJpYXQiOjE3MjQ0OTU0ODIsIm5iZiI6MTcyNDQ5NTQ4MiwiZGF0YSI6eyJyZWZfdXNlcl9pZCI6IjQyMTAzMiIsInJlZl91c2VyX2lwIjoiNDkuNDMuNy4yMzUiLCJyZWZfZmlyc3RfbmFtZSI6IlNhZ2FyIiwicmVmX2xhc3RfbmFtZSI6Ik5lZXJhaiIsInJlZl91c2VyX2VtYWlsIjoidml0cHJvamVjdG1hbmFnZXJAeWFob28uY29tIiwicmVmX2ltYWdlIjpudWxsLCJyZWZfdXNlcl90eXBlIjoib3RoZXIifX0.7IyHBYruRUwiQ5j5vscZcZJKD28wQieifWx7zigiDQE',
+        // 'Bearer ${getStorage.read('token')}',
         'Cookie': 'ci_session=41ip78h92q0a52te4gkg2vr9lrp7cf04'
       };
 

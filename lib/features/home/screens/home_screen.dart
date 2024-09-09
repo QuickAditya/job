@@ -11,6 +11,7 @@ import 'package:job/utils/custombutton.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/job_model.dart';
+import 'package:share_plus/share_plus.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -99,6 +100,7 @@ class _HomePageState extends State<HomePage> {
             )),
         trailing: IconButton(
             onPressed: () => Navigator.pushNamed(context, '/profile'),
+            //onPressed: () => Navigator.pushNamed(context, '/uprofile'),
             icon: const Icon(CupertinoIcons.profile_circled)),
       ),
       child: Consumer<HomeController>(
@@ -212,7 +214,7 @@ class JobCard extends StatelessWidget {
   Widget build(BuildContext context) {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isDarkMode = brightness == Brightness.dark;
-    final homeController = Provider.of<HomeController>(context, listen: false);
+    // final homeController = Provider.of<HomeController>(context, listen: false);
     final getStorage = GetIt.instance<GetStorage>();
 
     // Fetch the saved job IDs from GetStorage
@@ -267,13 +269,20 @@ class JobCard extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         if (job.jobId != null) {
-                          log('save job');
+                          log('Toggling save job');
 
                           if (!isSaved) {
                             savedJobIds.add(job.jobId.toString());
                             getStorage.write('savejob', savedJobIds);
+                            log('savedJobIds::::    ${savedJobIds.length}');
+                            log('Job added: ${job.jobId}');
+                          } else {
+                            // If the job is not saved, add it to the saved list
+                            savedJobIds.remove(job.jobId.toString());
+                            log('Job remove: ${job.jobId}');
                           }
-
+                          // Write the updated list back to GetStorage
+                          getStorage.write('savejob', savedJobIds);
                           log('stored job IDs: ' + savedJobIds.toString());
                           log('stored job IDs length: ' +
                               savedJobIds.length.toString());
@@ -283,15 +292,12 @@ class JobCard extends StatelessWidget {
                         }
                       },
                       child: Container(
-                          // padding: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           height: 30,
                           width: 30,
-                          decoration: ShapeDecoration(
-                            color: const Color.fromARGB(255, 20, 82, 181),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                          ),
+                          decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 20, 82, 181),
+                              shape: BoxShape.circle),
                           child: isSaved
                               ?
                               //  Padding(
@@ -304,28 +310,38 @@ class JobCard extends StatelessWidget {
                               const Icon(
                                   CupertinoIcons.bookmark_fill,
                                   color: CupertinoColors.white,
+                                  size: 20,
                                 )
                               : const Icon(
                                   CupertinoIcons.bookmark,
                                   color: CupertinoColors.white,
+                                  size: 20,
                                 )),
                     ),
                     const SizedBox(width: 10),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        // Share the job details using the share_plus package
+                        String jobDetails = '''
+Job Title: ${job.jobTitle ?? 'No Title'}
+Location: ${job.location ?? 'Not Specified'}
+Job Type: ${job.jobType ?? 'Not Specified'}
+Experience: ${job.minExperience ?? 'N/A'} - ${job.maxExperience ?? 'N/A'}
+Referral Link: ${job.jobReferralUrl ?? 'No Link Available'}
+    ''';
+
+                        Share.share(jobDetails);
+                      },
                       child: Container(
-                        padding: const EdgeInsets.all(6),
-                        height: 27,
-                        width: 27,
-                        decoration: ShapeDecoration(
-                          color: const Color.fromARGB(255, 20, 82, 181),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                        ),
+                        padding: const EdgeInsets.all(7),
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 20, 82, 181),
+                            shape: BoxShape.circle),
                         child: const Image(
                           image: AssetImage('assets/images/share.png'),
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fill,
                         ),
                       ),
                     )

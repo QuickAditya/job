@@ -1,8 +1,10 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job/features/auth/controllers/auth_controller.dart';
 import 'package:job/features/auth/screens/widgets/custom_button.dart';
@@ -23,7 +25,13 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _obscureText = true; // State variable for password visibility
+  bool emailError = false;
+  bool passError = false;
+  bool pass2Error = false;
+  bool validEmail = false;
 
+  FocusNode passwordNode = FocusNode();
+  FocusNode emailNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -70,41 +78,35 @@ class _LoginPageState extends State<LoginPage> {
                             height: 50,
                           ),
 
-                          CustomCupertinoTextField(
-                            controller: emailController,
-                            placeholder: 'Email Address',
-                            prefixIcon: Icon(
-                              Icons.email_outlined,
-                              color: Color(0xffC5C1C1),
-                            ),
-                          ),
+                          emailfield(),
+                          emailController.text.isEmpty
+                              ? Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  alignment: Alignment.centerLeft,
+                                  margin: EdgeInsets.only(left: 5, top: 3),
+                                  child: Text(
+                                      emailError ? 'Enter email address' : '',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 13,
+                                          color: Colors.red)),
+                                )
+                              : Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  alignment: Alignment.centerLeft,
+                                  margin: EdgeInsets.only(left: 2),
+                                  child: Text(
+                                      validEmail ? 'Enter valid email id' : '',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 13,
+                                          color: Colors.red)),
+                                ),
                           const SizedBox(height: 20),
                           Stack(
                             alignment: Alignment.centerRight,
                             children: [
-                              CupertinoTextField(
-                                onChanged: (value) {},
-                                prefix: Padding(
-                                  padding: EdgeInsets.only(left: 5),
-                                  child: Icon(
-                                    Icons.lock_open,
-                                    color: Color(0xffC5C1C1),
-                                  ),
-                                ),
-                                maxLength: 12,
-                                controller: passwordController,
-                                placeholder: 'Password',
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 12.0),
-                                decoration: BoxDecoration(
-                                  // color: CupertinoColors.black,
-                                  border: Border.all(
-                                      color: CupertinoColors.systemGrey4),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                obscureText: _obscureText,
-                                textInputAction: TextInputAction.done,
-                              ),
+                              passwordField(),
                               CupertinoButton(
                                 padding: EdgeInsets.zero,
                                 child: Icon(
@@ -121,6 +123,24 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ],
                           ),
+                          Container(
+                              width: MediaQuery.of(context).size.width,
+                              alignment: Alignment.centerLeft,
+                              margin: EdgeInsets.only(left: 5, top: 3),
+                              child: passwordController.text.isEmpty
+                                  ? Text(passError ? 'Enter Password' : '',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 13,
+                                          color: Colors.red))
+                                  : Text(
+                                      pass2Error
+                                          ? 'Password length should be at leat 8'
+                                          : '',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 13,
+                                          color: Colors.red))),
 
                           const SizedBox(height: 20),
                           // CupertinoButton.filled(
@@ -179,11 +199,144 @@ class _LoginPageState extends State<LoginPage> {
                           // ),
                           CustomButton2(
                             width: s.width * 0.8,
+                            // onPressed: () async {
+                            //   if ((_formKey.currentState?.validate() ??
+                            //           false) &&
+                            //       emailController.text.isNotEmpty &&
+                            //       passwordController.text.isNotEmpty) {
+                            //     final result = await authController.login(
+                            //       emailController.text,
+                            //       passwordController.text,
+                            //     );
+                            //     result.fold(
+                            //       (error) => showCupertinoDialog(
+                            //         context: context,
+                            //         builder: (context) => CupertinoAlertDialog(
+                            //           title: const Text('Error'),
+                            //           content: Text(error),
+                            //           actions: [
+                            //             CupertinoDialogAction(
+                            //               child: const Text('OK'),
+                            //               onPressed: () {
+                            //                 Navigator.of(context).pop();
+                            //               },
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       ),
+                            //       (success) => Navigator.pushReplacementNamed(
+                            //           context, '/home'),
+                            //     );
+                            //   } else {
+                            //     showCupertinoDialog(
+                            //       context: context,
+                            //       builder: (context) => CupertinoAlertDialog(
+                            //         title: const Text('Invalid Field'),
+                            //         content:
+                            //             const Text("Invalid Email/Password"),
+                            //         actions: [
+                            //           CupertinoDialogAction(
+                            //             child: const Text('OK'),
+                            //             onPressed: () {
+                            //               Navigator.of(context).pop();
+                            //             },
+                            //           ),
+                            //         ],
+                            //       ),
+                            //     );
+                            //   }
+                            // },
+
+                            // onPressed: () async {
+                            //   if (emailController.text.isEmpty) {
+                            //     setState(() {
+                            //       emailError = true;
+                            //     });
+                            //     emailNode.requestFocus();
+                            //   } else if (passwordController.text.isEmpty) {
+                            //     setState(() {
+                            //       passError = true;
+                            //     });
+                            //     passwordNode.requestFocus();
+                            //   } else if (!RegExp(
+                            //           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                            //       .hasMatch(emailController.text)) {
+                            //     setState(() {
+                            //       validEmail = true;
+                            //     });
+                            //     emailNode.requestFocus();
+                            //   } else if (!RegExp(r'^.{8,}$')
+                            //       .hasMatch(passwordController.text)) {
+                            //     setState(() {
+                            //       pass2Error = true;
+                            //     });
+                            //     passwordNode.requestFocus();
+                            //     print('at least 8 length');
+                            //   } else {
+                            //     setState(() {
+                            //       emailError = false;
+                            //       passError = false;
+                            //     });
+                            //     final result = await authController.login(
+                            //       emailController.text,
+                            //       passwordController.text,
+                            //     );
+                            //     result.fold(
+                            //       (error) => showCupertinoDialog(
+                            //         context: context,
+                            //         builder: (context) => CupertinoAlertDialog(
+                            //           title: const Text('Error'),
+                            //           content: Text(error),
+                            //           actions: [
+                            //             CupertinoDialogAction(
+                            //               child: const Text('OK'),
+                            //               onPressed: () {
+                            //                 Navigator.of(context).pop();
+                            //               },
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       ),
+                            //       (success) => Navigator.pushReplacementNamed(
+                            //           context, '/home'),
+                            //     );
+                            //   }
+                            // },
                             onPressed: () async {
-                              if ((_formKey.currentState?.validate() ??
-                                      false) &&
-                                  emailController.text.isNotEmpty &&
-                                  passwordController.text.isNotEmpty) {
+                              if (emailController.text.isEmpty) {
+                                setState(() {
+                                  emailError = true;
+                                });
+                                if (passwordController.text.isEmpty) {
+                                  setState(() {
+                                    passError = true;
+                                  });
+                                }
+                                emailNode.requestFocus();
+                              } else if (!RegExp(
+                                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                  .hasMatch(emailController.text)) {
+                                setState(() {
+                                  validEmail = true;
+                                });
+                              } else if (passwordController.text.isEmpty) {
+                                setState(() {
+                                  passError = true;
+                                });
+                                passwordNode.requestFocus();
+                              } else if (!RegExp(r'^.{8,}$')
+                                  .hasMatch(passwordController.text)) {
+                                setState(() {
+                                  pass2Error = true;
+                                });
+                                passwordNode.requestFocus();
+                                print('at least 8 length');
+                              } else {
+                                setState(() {
+                                  emailError = false;
+                                  passError = false;
+                                });
+                                print('succesfully login');
                                 final result = await authController.login(
                                   emailController.text,
                                   passwordController.text,
@@ -206,23 +359,6 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   (success) => Navigator.pushReplacementNamed(
                                       context, '/home'),
-                                );
-                              } else {
-                                showCupertinoDialog(
-                                  context: context,
-                                  builder: (context) => CupertinoAlertDialog(
-                                    title: const Text('Invalid Field'),
-                                    content:
-                                        const Text("Invalid Email/Password"),
-                                    actions: [
-                                      CupertinoDialogAction(
-                                        child: const Text('OK'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  ),
                                 );
                               }
                             },
@@ -292,6 +428,105 @@ class _LoginPageState extends State<LoginPage> {
           ),
         );
       },
+    );
+  }
+
+  passwordField() {
+    return CupertinoTextField(
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')), // Disallow spaces
+      ],
+      focusNode: passwordNode,
+      onChanged: (value) {
+        value = passwordController.text;
+        if (value.isEmpty) {
+          setState(() {
+            passError = true;
+          });
+        } else if (!RegExp(r'^.{8,}$').hasMatch(passwordController.text)) {
+          setState(() {
+            pass2Error = true;
+          });
+          passwordNode.requestFocus();
+          print('at least 8 length');
+        } else {
+          setState(() {
+            passError = false;
+            pass2Error = false;
+          });
+        }
+      },
+      prefix: Padding(
+        padding: EdgeInsets.only(left: 5),
+        child: Icon(
+          Icons.lock_open,
+          color: Color(0xffC5C1C1),
+        ),
+      ),
+      maxLength: 12,
+      controller: passwordController,
+      placeholder: 'Password',
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        // color: CupertinoColors.black,
+        border: Border.all(
+            color: passError || pass2Error
+                ? Colors.red
+                : CupertinoColors.systemGrey4),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      obscureText: _obscureText,
+      textInputAction: TextInputAction.done,
+    );
+  }
+
+  emailfield() {
+    return CupertinoTextField(
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')), // Disallow spaces
+      ],
+      onChanged: (value) {
+        value = emailController.text;
+        if (value.isEmpty) {
+          setState(() {
+            emailError = true;
+          });
+        } else if (!RegExp(
+                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+            .hasMatch(value)) {
+          setState(() {
+            validEmail = true;
+          });
+        } else {
+          setState(() {
+            log('emailError');
+            emailError = false;
+            validEmail = false;
+          });
+        }
+      },
+      focusNode: emailNode,
+      prefix: Padding(
+        padding: EdgeInsets.only(left: 5),
+        child: Icon(
+          Icons.email_outlined,
+          color: Color(0xffC5C1C1),
+        ),
+      ),
+      // maxLength: 12,
+      controller: emailController,
+      placeholder: 'Email',
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        // color: CupertinoColors.black,
+        border: Border.all(
+            color: emailError || validEmail
+                ? Colors.red
+                : CupertinoColors.systemGrey4),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      //obscureText: _obscureText,
+      textInputAction: TextInputAction.done,
     );
   }
 }

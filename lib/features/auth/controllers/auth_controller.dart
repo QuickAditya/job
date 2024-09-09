@@ -56,7 +56,8 @@ class AuthController with ChangeNotifier {
         getStorage.write('number', number);
         getStorage.write('token', responseModel.items.token);
         getStorage.write('userId', responseModel.items.id);
-        getStorage.write('isLogin', true);
+        //  getStorage.write('isLogin', true);
+
         return const Right(true);
       } else {
         return const Left('Signup failed');
