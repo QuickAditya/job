@@ -78,15 +78,15 @@ class _LoginPageState extends State<LoginPage> {
                             height: 50,
                           ),
 
-                          CustomCupertinoTextField(
-                            key:Key('login-email-text-field'),
-                            controller: emailController,
-                            placeholder: 'Email Address',
-                            prefixIcon: Icon(
-                              Icons.email_outlined,
-                              color: Color(0xffC5C1C1),
-                            ),
-                          ),
+                          // CustomCupertinoTextField(
+                          //   key: Key('login-email-text-field'),
+                          //   controller: emailController,
+                          //   placeholder: 'Email Address',
+                          //   prefixIcon: Icon(
+                          //     Icons.email_outlined,
+                          //     color: Color(0xffC5C1C1),
+                          //   ),
+                          // ),
                           emailfield(),
                           emailController.text.isEmpty
                               ? Container(
@@ -115,30 +115,30 @@ class _LoginPageState extends State<LoginPage> {
                           Stack(
                             alignment: Alignment.centerRight,
                             children: [
-                              CupertinoTextField(
-                                key: Key('login-password-text-field'),
-                                onChanged: (value) {},
-                                prefix: Padding(
-                                  padding: EdgeInsets.only(left: 5),
-                                  child: Icon(
-                                    Icons.lock_open,
-                                    color: Color(0xffC5C1C1),
-                                  ),
-                                ),
-                                maxLength: 12,
-                                controller: passwordController,
-                                placeholder: 'Password',
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 12.0),
-                                decoration: BoxDecoration(
-                                  // color: CupertinoColors.black,
-                                  border: Border.all(
-                                      color: CupertinoColors.systemGrey4),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                obscureText: _obscureText,
-                                textInputAction: TextInputAction.done,
-                              ),
+                              // CupertinoTextField(
+                              //   key: Key('login-password-text-field'),
+                              //   onChanged: (value) {},
+                              //   prefix: Padding(
+                              //     padding: EdgeInsets.only(left: 5),
+                              //     child: Icon(
+                              //       Icons.lock_open,
+                              //       color: Color(0xffC5C1C1),
+                              //     ),
+                              //   ),
+                              //   maxLength: 12,
+                              //   controller: passwordController,
+                              //   placeholder: 'Password',
+                              //   padding: const EdgeInsets.symmetric(
+                              //       horizontal: 16.0, vertical: 12.0),
+                              //   decoration: BoxDecoration(
+                              //     // color: CupertinoColors.black,
+                              //     border: Border.all(
+                              //         color: CupertinoColors.systemGrey4),
+                              //     borderRadius: BorderRadius.circular(8.0),
+                              //   ),
+                              //   obscureText: _obscureText,
+                              //   textInputAction: TextInputAction.done,
+                              // ),
                               passwordField(),
                               CupertinoButton(
                                 key: Key('login-eye-button'),
@@ -232,7 +232,7 @@ class _LoginPageState extends State<LoginPage> {
                           //   },
                           // ),
                           CustomButton2(
-                          key: Key('login-button'),
+                            key: Key('login-button'),
                             width: s.width * 0.8,
                             // onPressed: () async {
                             //   if ((_formKey.currentState?.validate() ??
@@ -412,7 +412,6 @@ class _LoginPageState extends State<LoginPage> {
                                       color: Colors.black, fontSize: 16),
                                 ),
                                 TextSpan(
-                                  
                                   text: 'SignUp',
                                   style: TextStyle(
                                     color: Colors.blue,
@@ -519,6 +518,7 @@ class _LoginPageState extends State<LoginPage> {
 
   emailfield() {
     return CupertinoTextField(
+      key: Key('login-email-text-field'),
       inputFormatters: [
         FilteringTextInputFormatter.deny(RegExp(r'\s')), // Disallow spaces
       ],

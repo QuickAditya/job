@@ -22,6 +22,8 @@ class CustomCupertinoTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoTextField(
+    
+      
       controller: controller,
       placeholder: placeholder,
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),

@@ -185,40 +185,40 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                             const SizedBox(height: 20),
 
-                            CupertinoTextField(
-                              key: Key('signup-number-text-field'),
-                              keyboardType: TextInputType.number,
-                              prefix: Padding(
-                                padding: EdgeInsets.only(left: 5),
-                                child: Icon(
-                                  Icons.call,
-                                  color: Color(0xffC5C1C1),
-                                ),
-                              ),
-                              maxLength: 10,
-                              controller: numberController,
-                              placeholder: 'Phone number',
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 12.0),
-                              decoration: BoxDecoration(
-                                // color: CupertinoColors.black,
-                                border: Border.all(
-                                    color: CupertinoColors.systemGrey4),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              //  textInputAction: TextInputAction.done,
-                            ),
-                            const SizedBox(height: 20),
+                            // CupertinoTextField(
+                            //   key: Key('signup-number-text-field'),
+                            //   keyboardType: TextInputType.number,
+                            //   prefix: Padding(
+                            //     padding: EdgeInsets.only(left: 5),
+                            //     child: Icon(
+                            //       Icons.call,
+                            //       color: Color(0xffC5C1C1),
+                            //     ),
+                            //   ),
+                            //   maxLength: 10,
+                            //   controller: numberController,
+                            //   placeholder: 'Phone number',
+                            //   padding: const EdgeInsets.symmetric(
+                            //       horizontal: 16.0, vertical: 12.0),
+                            //   decoration: BoxDecoration(
+                            //     // color: CupertinoColors.black,
+                            //     border: Border.all(
+                            //         color: CupertinoColors.systemGrey4),
+                            //     borderRadius: BorderRadius.circular(8.0),
+                            //   ),
+                            //   //  textInputAction: TextInputAction.done,
+                            // ),
+                            // const SizedBox(height: 20),
 
-                            CustomCupertinoTextField(
-                              key: Key('signup-email-text-field'),
-                              controller: emailController,
-                              placeholder: 'Email Address',
-                              prefixIcon: Icon(
-                                Icons.email,
-                                color: Color(0xffC5C1C1),
-                              ),
-                            ),
+                            // CustomCupertinoTextField(
+                            //   key: Key('signup-email-text-field'),
+                            //   controller: emailController,
+                            //   placeholder: 'Email Address',
+                            //   prefixIcon: Icon(
+                            //     Icons.email,
+                            //     color: Color(0xffC5C1C1),
+                            //   ),
+                            // ),
 
                             nameField(),
                             Container(

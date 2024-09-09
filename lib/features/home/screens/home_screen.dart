@@ -13,7 +13,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../models/job_model.dart';
 import 'package:share_plus/share_plus.dart';
 
-// Testing
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -22,37 +21,71 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // bool dataLoaded = false;
+  bool dataLoaded = false;
   late ScrollController _scrollController;
 
   @override
   void initState() {
     _scrollController = ScrollController();
-    // _scrollController.addListener(_scrollListener);
-
-    // fetchHomePageData();
+    _scrollController.addListener(_scrollListener);
+    fetchHomePageData();
     super.initState();
   }
 
-  // _scrollListener() {
-  //   if (_scrollController.offset >=
-  //           _scrollController.position.maxScrollExtent &&
-  //       !_scrollController.position.outOfRange) {
-  //     // setState(() {
-  //     //   message = "reach the bottom";
-  //     // });
-  //   }
-  //   if (_scrollController.offset <=
-  //           _scrollController.position.minScrollExtent &&
-  //       !_scrollController.position.outOfRange) {
-  //     // setState(() {
-  //     //   message = "reach the top";
-  //     // });
-  //   }
-  // }
+  _scrollListener() {
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      // setState(() {
+      //   message = "reach the bottom";
+      // });
+    }
+    if (_scrollController.offset <=
+            _scrollController.position.minScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      // setState(() {
+      //   message = "reach the top";
+      // });
+    }
+  }
+
+  fetchHomePageData() async {
+    setState(() {
+      dataLoaded = true;
+    });
+    final result = await Provider.of<HomeController>(context, listen: false)
+        .fetchJobData();
+    result.fold(
+      (error) => CupertinoPageScaffold(
+        navigationBar: const CupertinoNavigationBar(
+          middle: Text('Job Listings'),
+        ),
+        child: Center(
+          child: CupertinoAlertDialog(
+            title: const Text('Error'),
+            content: Text(error),
+            actions: [
+              CupertinoDialogAction(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      (success) {
+        setState(() {
+          dataLoaded = true;
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    // fetchHomePageData();
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: const Text('Job Listings'),
@@ -71,16 +104,12 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(CupertinoIcons.profile_circled)),
       ),
       child: Consumer<HomeController>(
-        builder: (_, homeController, __) {
-          if (homeController.isLoading) {
-            return const Center(child: CupertinoActivityIndicator());
-          }
-
+        builder: (__, homeController, _) {
           if (homeController.jobModel == null ||
               homeController.jobModel!.data == null ||
               homeController.jobModel!.data!.job == null ||
-              homeController.jobModel!.data!.job!.isEmpty) {
-            return const Center(child: Text('No Jobs Found'));
+              !dataLoaded) {
+            return const Center(child: CupertinoActivityIndicator());
           }
 
           return Padding(
@@ -105,9 +134,8 @@ class _HomePageState extends State<HomePage> {
                 //   ),
                 // ),
                 CupertinoSliverRefreshControl(
-                  key: Key('refresh-indicator'),
                   onRefresh: () async {
-                    await homeController.fetchHomePageData(context);
+                    await fetchHomePageData();
                   },
                 ),
                 SliverList(
@@ -141,7 +169,7 @@ class _HomePageState extends State<HomePage> {
 
                               homeController.updateCurrentPage(
                                   homeController.currentPage - 1);
-                              homeController.fetchHomePageData(context);
+                              fetchHomePageData();
                             },
                           ),
                         if (homeController.currentPage > 1)
@@ -161,7 +189,7 @@ class _HomePageState extends State<HomePage> {
 
                             homeController.updateCurrentPage(
                                 homeController.currentPage + 1);
-                            homeController.fetchHomePageData(context);
+                            fetchHomePageData();
                           },
                         ),
                       ],
